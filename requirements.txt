@@ -1,0 +1,6 @@
+virtualenv
+plotly
+#plotly-orca
+numpy
+matplotlib
+pdf2image
