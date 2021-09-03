@@ -10,11 +10,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-from mattsplotlib.mattsplotlib_class import mattsplotlib, figureHandle
+from mattsplotlib.mattsplotlib_class import MattsPlotLib, figureHandle
 from mattsplotlib import style
-
-def test_function():
-    print('Imported!')
 
 
 def figure():
