@@ -5,7 +5,7 @@ import os
 
 
 class MattsPlotLib:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         pass
 
 class figureHandle(go.Figure):
