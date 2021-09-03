@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+src/__pycache__*
+*/__pycache__*
+src/mattsplotlib/__pycache__/*
 __pycache__/
 *.py[cod]
 
