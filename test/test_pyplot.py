@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 from unittest.mock import patch
 
-import mattsplotlib.pyplot as mplt
+import matly.pyplot as mplt
 
 from fixtures.mock_functions import mock_class
 
@@ -89,8 +89,8 @@ def test_create_make_subplots_kwargs():
     assert kwargs_returned == {'shared_xaxes': False, 'shared_yaxes': True}
 
 
-@patch.object(mplt, 'MattsPlotLib', return_value=Mock())
-def test_generate_axes_single(mattsplotlib_mock):
+@patch.object(mplt, 'Matly', return_value=Mock())
+def test_generate_axes_single(matly_mock):
     figure_mock = Mock()
     figsize_mock = Mock()
     subplot_layout_mock = Mock()
@@ -99,9 +99,9 @@ def test_generate_axes_single(mattsplotlib_mock):
                                        figure=figure_mock,
                                        figsize=figsize_mock,
                                        subplot_layout=subplot_layout_mock)
-    _, called_kwargs = mattsplotlib_mock.call_args
+    _, called_kwargs = matly_mock.call_args
 
-    mattsplotlib_mock.assert_called
+    matly_mock.assert_called
     assert called_kwargs['row'] == 1
     assert called_kwargs['col'] == 1
     assert called_kwargs['figure'] == figure_mock
@@ -110,8 +110,8 @@ def test_generate_axes_single(mattsplotlib_mock):
     assert figure == figure_mock
 
 
-@patch.object(mplt, 'MattsPlotLib', return_value=Mock())
-def test_generate_axes_2col(mattsplotlib_mock):
+@patch.object(mplt, 'Matly', return_value=Mock())
+def test_generate_axes_2col(matly_mock):
     figure_mock = Mock()
     figsize_mock = Mock()
     subplot_layout_mock = Mock()
@@ -120,10 +120,10 @@ def test_generate_axes_2col(mattsplotlib_mock):
                                        figure=figure_mock,
                                        figsize=figsize_mock,
                                        subplot_layout=subplot_layout_mock)
-    _, called_kwargs = mattsplotlib_mock.call_args
+    _, called_kwargs = matly_mock.call_args
 
-    mattsplotlib_mock.assert_called
-    assert mattsplotlib_mock.call_count == 2
+    matly_mock.assert_called
+    assert matly_mock.call_count == 2
     assert called_kwargs['row'] == 1
     assert called_kwargs['col'] == 2
     assert called_kwargs['figure'] == figure_mock
@@ -133,8 +133,8 @@ def test_generate_axes_2col(mattsplotlib_mock):
     assert axes.shape == (2, )
 
 
-@patch.object(mplt, 'MattsPlotLib', return_value=Mock())
-def test_generate_axes_2row(mattsplotlib_mock):
+@patch.object(mplt, 'Matly', return_value=Mock())
+def test_generate_axes_2row(matly_mock):
     figure_mock = Mock()
     figsize_mock = Mock()
     subplot_layout_mock = Mock()
@@ -143,10 +143,10 @@ def test_generate_axes_2row(mattsplotlib_mock):
                                        figure=figure_mock,
                                        figsize=figsize_mock,
                                        subplot_layout=subplot_layout_mock)
-    _, called_kwargs = mattsplotlib_mock.call_args
+    _, called_kwargs = matly_mock.call_args
 
-    mattsplotlib_mock.assert_called
-    assert mattsplotlib_mock.call_count == 2
+    matly_mock.assert_called
+    assert matly_mock.call_count == 2
     assert called_kwargs['row'] == 2
     assert called_kwargs['col'] == 1
     assert called_kwargs['figure'] == figure_mock
@@ -156,8 +156,8 @@ def test_generate_axes_2row(mattsplotlib_mock):
     assert axes.shape == (2,)
 
 
-@patch.object(mplt, 'MattsPlotLib', return_value=Mock())
-def test_generate_axes_grid(mattsplotlib_mock):
+@patch.object(mplt, 'Matly', return_value=Mock())
+def test_generate_axes_grid(matly_mock):
     figure_mock = Mock()
     figsize_mock = Mock()
     subplot_layout_mock = Mock()
@@ -166,10 +166,10 @@ def test_generate_axes_grid(mattsplotlib_mock):
                                        figure=figure_mock,
                                        figsize=figsize_mock,
                                        subplot_layout=subplot_layout_mock)
-    _, called_kwargs = mattsplotlib_mock.call_args
+    _, called_kwargs = matly_mock.call_args
 
-    mattsplotlib_mock.assert_called
-    assert mattsplotlib_mock.call_count == 6
+    matly_mock.assert_called
+    assert matly_mock.call_count == 6
     assert called_kwargs['row'] == 2
     assert called_kwargs['col'] == 3
     assert called_kwargs['figure'] == figure_mock

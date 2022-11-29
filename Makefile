@@ -4,7 +4,7 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PROFILE = default
-PROJECT_NAME = mattsplotlib
+PROJECT_NAME = matly
 PYTHON_INTERPRETER = python3
 
 ifeq (,$(shell which conda))

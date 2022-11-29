@@ -1,8 +1,8 @@
 #    __   ___
-#   /  |_/  / _   /_  /_ __  __ /  __ /_  /  * /__
-#  / /|_// / __| /   /  /_  / //  / //   /  / /  /
-# /_/   /_/ /_///__ /__ __//_//_ /_//__ /_ / /__/
-#                         /
+#   /  |_/  / _   /_  /
+#  / /|_// / __| /   /   /  /
+# /_/   /_/ /_///__ /__ /__/
+#                       __/
 
 
 
@@ -10,8 +10,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-from mattsplotlib.mattsplotlib_class import MattsPlotLib, figureHandle
-from mattsplotlib import style
+from matly.matly_class import Matly, figureHandle
+from matly import style
 
 
 def figure():
@@ -68,37 +68,37 @@ def _create_subplot_figurehandle(rows, cols, make_subplots_kwargs):
 
 def _generate_axes(rows=None, cols=None, figure=None, figsize=None, subplot_layout=None):
     if rows * cols == 1:
-        axes = MattsPlotLib(figure=figure,
-                            row=1,
-                            col=1,
-                            figsize=figsize,
-                            subplot_layout=subplot_layout,
-                            )
+        axes = Matly(figure=figure,
+                     row=1,
+                     col=1,
+                     figsize=figsize,
+                     subplot_layout=subplot_layout)
+
     elif rows == 1:
         axes = []
         for c in range(1, cols + 1):
-            axes.append(MattsPlotLib(figure=figure,
-                                     row=1,
-                                     col=c,
-                                     figsize=figsize,
-                                     subplot_layout=subplot_layout))
+            axes.append(Matly(figure=figure,
+                              row=1,
+                              col=c,
+                              figsize=figsize,
+                              subplot_layout=subplot_layout))
     elif cols == 1:
         axes = []
         for r in range(1, rows + 1):
-            axes.append(MattsPlotLib(figure=figure,
-                                     row=r,
-                                     col=1,
-                                     figsize=figsize,
-                                     subplot_layout=subplot_layout))
+            axes.append(Matly(figure=figure,
+                              row=r,
+                              col=1,
+                              figsize=figsize,
+                              subplot_layout=subplot_layout))
     else:
         axes = [[]]
         for r in range(1, rows + 1):
             if r > 1:
                 axes.append([])
             for c in range(1, cols + 1):
-                axes[r - 1] += [MattsPlotLib(figure=figure,
-                                             row=r,
-                                             col=c,
-                                             figsize=figsize,
-                                             subplot_layout=subplot_layout)]
+                axes[r - 1] += [Matly(figure=figure,
+                                      row=r,
+                                      col=c,
+                                      figsize=figsize,
+                                      subplot_layout=subplot_layout)]
     return figure, np.array(axes)

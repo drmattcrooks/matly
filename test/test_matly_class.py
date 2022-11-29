@@ -1,8 +1,8 @@
 from unittest.mock import patch, mock_open, Mock
 from pdf2image import convert_from_bytes
 
-from mattsplotlib.mattsplotlib_class import MattsPlotLib, figureHandle
-import mattsplotlib.mattsplotlib_class
+from matly.matly_class import Matly, figureHandle
+import matly.matly_class
 from fixtures.mock_functions import mock_image
 
 TEST_FIGURE_PATH = "test/fixtures/test_figure.pdf"
@@ -10,11 +10,11 @@ MOCKED_OPEN_FILE = open(TEST_FIGURE_PATH, 'rb')
 MOCKED_TEMP_SAVED_PDF = open(TEST_FIGURE_PATH, 'rb').read()
 MOCKED_CONVERTED = convert_from_bytes(open(TEST_FIGURE_PATH, 'rb').read())
 
-def test_mattsplotlib_is_class():
-    assert MattsPlotLib().__class__.__name__ == 'MattsPlotLib'
+def test_matly_is_class():
+    assert Matly().__class__.__name__ == 'Matly'
 
 
-@patch.object(mattsplotlib.mattsplotlib_class, 'super')
+@patch.object(matly.matly_class, 'super')
 def test_figure_handle_initiate(super_mock):
     fig = figureHandle()
     assert fig.__class__.__name__ == 'figureHandle'
@@ -51,10 +51,10 @@ def test_save_fig_error():
         assert str(error) == f"Unrecognised file format in filename: {filename}"
 
 
-@patch.object(mattsplotlib.mattsplotlib_class.os, 'remove')
-@patch.object(mattsplotlib.mattsplotlib_class, 'open',
+@patch.object(matly.matly_class.os, 'remove')
+@patch.object(matly.matly_class, 'open',
               return_value = MOCKED_OPEN_FILE)
-@patch.object(mattsplotlib.mattsplotlib_class, 'convert_from_bytes')
+@patch.object(matly.matly_class, 'convert_from_bytes')
 def test_save_png(convert_mock, open_mock, remove_mock):
     mocked_image = mock_image()
     convert_mock.return_value = [mocked_image]

@@ -1,9 +1,9 @@
 import os
 import stylesheets
 
-INCLUDED_STYLESHEETS = ['mattsplotlib']
+INCLUDED_STYLESHEETS = ['matly']
 INCLUDED_STYLESHEET_FOLDER = f"{os.path.dirname(__file__)}/../stylesheets"
-os.environ['mattsplotlib_stylesheet'] = 'mattsplotlib'
+os.environ['matly_stylesheet'] = 'matly'
 
 
 def use(stylesheet_path):
@@ -14,4 +14,4 @@ def use(stylesheet_path):
 
 
 def _set_environ_stylesheet(path):
-    os.environ['mattsplotlib_stylesheet'] = path
+    os.environ['matly_stylesheet'] = path

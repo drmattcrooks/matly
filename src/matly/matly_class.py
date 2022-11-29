@@ -4,7 +4,7 @@ from pdf2image import convert_from_path, convert_from_bytes
 import os
 
 
-class MattsPlotLib:
+class Matly:
     def __init__(self, *args, **kwargs):
         pass
 
