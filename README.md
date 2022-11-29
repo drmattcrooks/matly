@@ -1,4 +1,4 @@
-# mattsplotlib
+# matly
 matplotlib syntax for plotly
 
 ## Requirements
@@ -9,7 +9,7 @@ as well as conda or npm
 ## Add path
 To add the locations of the files to your path so that python can find all the code run
 ```
-source .mattsplotlib_env
+source .matly_env
 ```
 
 # Importing requirements
