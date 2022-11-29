@@ -7,14 +7,9 @@ package managing tool that can install them. For that reason it is advised that 
 as well as conda or npm
 
 ## Add path
-If you're on a newer mac that uses zsh then run this in the command line:
+To add the locations of the files to your path so that python can find all the code run
 ```
-echo 'export PATH="{local_path_to_mattsplotlib}/src:$PATH"' >> ~/.zshrc
-```
-
-If you're on an older mac that uses bash shell then run this in the command line:
-```
-echo 'export PATH="{local_path_to_mattsplotlib}/src:$PATH"' >> ~/.bash_profile
+source .mattsplotlib_env
 ```
 
 # Importing requirements
@@ -30,6 +25,7 @@ make requirements
 Then you'll need to install plotly-orca. There are three options here: https://plotly.com/python/orca-management/
 
 ## Poppler
+You'll also need poppler which is not available through pip and must be installed using homebrew.
 ```
 brew install poppler
 ```

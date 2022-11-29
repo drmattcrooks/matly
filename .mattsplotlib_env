@@ -1,0 +1,4 @@
+export PATH="$(pwd):$PATH"
+export PATH="$(pwd)/src:$PATH"
+export PYTHONPATH="$(pwd):$PYTHONPATH"
+export PYTHONPATH="$(pwd)/src:$PYTHONPATH"

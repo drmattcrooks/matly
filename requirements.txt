@@ -6,3 +6,7 @@ matplotlib
 pdf2image
 pytest
 pytest-cov==2.12.1
+psutil
+requests
+nbformat>=4.2.0
+kaleido
