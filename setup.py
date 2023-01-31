@@ -4,7 +4,7 @@ setup(
     name='matly',
     version='0.1',
     license='',
-    description='mattsplotlib syntax for plotly',
+    description='matplotlib syntax for plotly',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     author='Matt Crooks',

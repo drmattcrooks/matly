@@ -1,0 +1,4 @@
+export PYTHONPATH="${PYTHONPATH#"$(pwd)/src:"}"
+export PYTHONPATH="${PYTHONPATH#"$(pwd):"}"
+export PATH="${PATH#"$(pwd)/src:"}"
+export PATH="${PATH#"$(pwd):"}"
