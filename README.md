@@ -40,3 +40,4 @@ To run unit tests run the following commands:
 To clean up after running tests run the following commands:
 - Deactivate virtual environment: `deactivate`
 - Remove virtual environment: `make clean`
+- Clean up `PATH` and `PYTHONPATH`: `source .clean_matly_env`
