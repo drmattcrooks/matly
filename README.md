@@ -29,3 +29,14 @@ You'll also need poppler which is not available through pip and must be installe
 ```
 brew install poppler
 ```
+
+# Testing
+To run unit tests run the following commands:
+- Set up the virtual environment: `make create_environment`
+- Activate virtual environment: `. venv/bin/activate`
+- Add path to `src` folder: `source .matly_env`
+- Run tests: `make test`
+
+To clean up after running tests run the following commands:
+- Deactivate virtual environment: `deactivate`
+- Remove virtual environment: `make clean`
