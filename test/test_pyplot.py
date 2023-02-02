@@ -108,6 +108,7 @@ def test_generate_axes_single(matly_mock):
     assert called_kwargs['figsize'] == figsize_mock
     assert called_kwargs['subplot_layout'] == subplot_layout_mock
     assert figure == figure_mock
+    assert str(type(axes)) == "<class 'unittest.mock.Mock'>"
 
 
 @patch.object(mplt, 'Matly', return_value=Mock())
@@ -130,6 +131,7 @@ def test_generate_axes_2col(matly_mock):
     assert called_kwargs['figsize'] == figsize_mock
     assert called_kwargs['subplot_layout'] == subplot_layout_mock
     assert figure == figure_mock
+    assert str(type(axes)) == "<class 'numpy.ndarray'>"
     assert axes.shape == (2, )
 
 
