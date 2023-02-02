@@ -101,4 +101,7 @@ def _generate_axes(rows=None, cols=None, figure=None, figsize=None, subplot_layo
                                       col=c,
                                       figsize=figsize,
                                       subplot_layout=subplot_layout)]
-    return figure, np.array(axes)
+    if rows * cols != 1:
+        axes = np.array(axes)
+
+    return figure, axes
