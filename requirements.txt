@@ -10,3 +10,4 @@ psutil
 requests
 nbformat>=4.2.0
 kaleido
+mock-open==1.4.0

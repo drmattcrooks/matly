@@ -108,7 +108,6 @@ def test_generate_axes_single(matly_mock):
     assert called_kwargs['figsize'] == figsize_mock
     assert called_kwargs['subplot_layout'] == subplot_layout_mock
     assert figure == figure_mock
-    print(str(type(axes)))
     assert str(type(axes)) == "<class 'unittest.mock.Mock'>"
 
 

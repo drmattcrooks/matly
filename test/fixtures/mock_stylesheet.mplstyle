@@ -1,0 +1,4 @@
+## See https://matplotlib.org/api/axis_api.html#matplotlib.axis.Tick
+xtick.top           : False   ## draw ticks on the top side
+
+xtick.bottom        : True    ## draw ticks on the bottom side

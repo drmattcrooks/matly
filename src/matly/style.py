@@ -1,9 +1,5 @@
 import os
-import stylesheets
-
-INCLUDED_STYLESHEETS = ['matly']
-INCLUDED_STYLESHEET_FOLDER = f"{os.path.dirname(__file__)}/../stylesheets"
-os.environ['matly_stylesheet'] = 'matly'
+from matly.rc_params import INCLUDED_STYLESHEETS, INCLUDED_STYLESHEET_FOLDER
 
 
 def use(stylesheet_path):
