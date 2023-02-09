@@ -21,6 +21,19 @@ To install the packages that can be install through pip use
 make requirements
 ```
 
+## Homebrew
+If you don't already have homebrew installed then type the following command into the terminal:
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+Note that the terminal window will ask for your mac password and then will present 2 commands that you need to paste into the terminal.
+
+## npm
+You might need npm in the orca installation (below). If you go down that route then use the command:
+```
+brew install node
+```
+
 ## ORCA
 Then you'll need to install plotly-orca. There are three options here: https://plotly.com/python/orca-management/
 
