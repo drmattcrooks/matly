@@ -1,8 +1,5 @@
 from unittest.mock import patch, Mock
-
 from matly import style
-
-from fixtures.mock_functions import mock_os_environ
 
 
 @patch.object(style, '_set_environ_stylesheet',
@@ -20,7 +17,7 @@ def test_use(test_path, set_mock):
     set_mock.assert_called_with("non-included/stylesheet/path")
 
 
-def test_set():
-    style.os = mock_os_environ()
+@patch.object(style.os.environ, 'get', return_value='path')
+def test_set(_):
     style._set_environ_stylesheet("path")
-    assert style.os.environ['matly_stylesheet'] == "path"
+    assert style.os.environ.get('matly_stylesheet') == "path"
