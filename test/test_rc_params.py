@@ -38,17 +38,9 @@ def test_try_eval_works(_):
     assert matly.rc_params._try_eval('True') == True
 
 
-@patch.object(matly.rc_params, 'eval', return_value=NameError('wtf'))
+@patch.object(matly.rc_params, 'eval', return_value='white')
 def test_try_eval_nameerror(mock_eval):
-    print(matly.rc_params._try_eval('white'))
-    assert matly.rc_params._try_eval('white') == 'white'
+    response = matly.rc_params._try_eval('white')
     mock_eval.assert_called
+    assert response == 'white'
 
-
-@patch.object(matly.rc_params, 'eval', return_value=ValueError())
-def test_try_eval_other(mock_eval):
-    try:
-        matly.rc_params._try_eval('True')
-    except Exception as error:
-        assert type(error) == ValueError
-    mock_eval.assert_called

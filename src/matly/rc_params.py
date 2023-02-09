@@ -26,8 +26,6 @@ def _try_eval(value):
         return eval(value)
     except NameError:
         return value
-    finally:
-        raise ValueError(f"Unknown rcparam value: {value}")
 
 
 def convert_stylesheet_to_dict():
