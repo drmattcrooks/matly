@@ -25,7 +25,18 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'axes.facecolor': 'mockGrey',
     'axes.grid': False,
     'axes.grid.axis': 'x',
-    'axes.spines.top': False
+    'xtick.bottom': True,
+    'xtick.top': False,
+    'ytick.left': True,
+    'ytick.right': False,
+    'xtick.direction': 'out',
+    'ytick.direction': 'out',
+    'xtick.major.size': 2,
+    'ytick.major.size': 2,
+    'xtick.major.width': 2,
+    'ytick.major.width': 2,
+    'xtick.color': 'Mockgrey',
+    'ytick.color': 'Mockred',
 }
 MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.edgecolor': None,
@@ -35,7 +46,18 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.facecolor': None,
     'axes.grid': None,
     'axes.grid.axis': None,
-    'axes.spines.top': None
+    'xtick.bottom': None,
+    'xtick.top': None,
+    'ytick.left': None,
+    'ytick.right': None,
+    'xtick.direction': None,
+    'ytick.direction': None,
+    'xtick.major.size': None,
+    'ytick.major.size': None,
+    'xtick.major.width': None,
+    'ytick.major.width': None,
+    'xtick.color': None,
+    'ytick.color': None
 }
 
 
@@ -403,3 +425,223 @@ def test_set_rcparams_layout_grid_rcparams():
     ax._set_rcparams_layout()
     assert ax.rcParams_layout['xaxis']['showgrid'] == True
     assert ax.rcParams_layout['yaxis']['showgrid'] == True
+
+
+def test_set_rcparams_layout_ticks_structure():
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ## Check for tick parameters
+    assert 'ticks' in ax.rcParams_layout['xaxis']
+    assert 'ticks' in ax.rcParams_layout['yaxis']
+
+    ## Check for ticklen parameters
+    assert 'ticklen' in ax.rcParams_layout['xaxis']
+    assert 'ticklen' in ax.rcParams_layout['yaxis']
+
+    ## Check for tickwidth parameters
+    assert 'tickwidth' in ax.rcParams_layout['xaxis']
+    assert 'tickwidth' in ax.rcParams_layout['yaxis']
+
+    ## Check for tick color parameters
+    assert 'color' in ax.rcParams_layout['xaxis']
+    assert 'color' in ax.rcParams_layout['yaxis']
+
+    ## Check for tick font parameters
+    assert 'family' in ax.rcParams_layout['xaxis']['tickfont']
+    assert 'family' in ax.rcParams_layout['yaxis']['tickfont']
+    assert 'size' in ax.rcParams_layout['xaxis']['tickfont']
+    assert 'size' in ax.rcParams_layout['yaxis']['tickfont']
+
+    # Check for mirror in parameters
+    assert 'mirror' in ax.rcParams_layout['xaxis']
+    assert 'mirror' in ax.rcParams_layout['yaxis']
+
+    # Check for side in parameters
+    assert 'side' in ax.rcParams_layout['xaxis']
+    assert 'side' in ax.rcParams_layout['yaxis']
+
+    # Check for direction in parameters
+    assert 'ticks' in ax.rcParams_layout['xaxis']
+    assert 'ticks' in ax.rcParams_layout['yaxis']
+
+
+def test_set_rcparams_layout_ticks_top_and_bottom_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Bottom Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = False
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['side'] == 'bottom'
+
+    # Top Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = False
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['side'] == 'top'
+
+    # Top and Bottom
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['mirror'] == 'allticks'
+
+
+def test_set_rcparams_layout_ticks_left_and_right_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Bottom Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = False
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['side'] == 'left'
+
+    # Top Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = False
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['side'] == 'right'
+
+    # Top and Bottom
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['mirror'] == 'allticks'
+
+
+def test_set_rcparams_layout_ticks_top_and_bottom_rcparams():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Left Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = False
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['side'] == 'bottom'
+
+    # Right Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = False
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['side'] == 'top'
+
+    # Left and Right
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.bottom'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.top'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['mirror'] == 'allticks'
+
+
+def test_set_rcparams_layout_ticks_left_and_right_rcparams():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Left Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = False
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['side'] == 'left'
+
+    # Right Only
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = False
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['side'] == 'right'
+
+    # Left and Right
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.left'] = True
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.right'] = True
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['mirror'] == 'allticks'
+
+
+def test_set_rcparams_layout_ticks_direction_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Inward facing ticks
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.direction'] = 'in'
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.direction'] = 'in'
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['ticks'] == 'inside'
+    assert ax.rcParams_layout['yaxis']['ticks'] == 'inside'
+
+    # Outward facing ticks
+    MOCKED_RCPARAMS_LAYOUT_DICT['xtick.direction'] = 'out'
+    MOCKED_RCPARAMS_LAYOUT_DICT['ytick.direction'] = 'out'
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['yaxis']['ticks'] == 'outside'
+    assert ax.rcParams_layout['yaxis']['ticks'] == 'outside'
+
+
+def test_set_rcparams_layout_ticks_len_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick length
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['ticklen'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.major.size']
+    assert ax.rcParams_layout['yaxis']['ticklen'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.major.size']
+
+
+def test_set_rcparams_layout_ticks_len_rcparams():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick length
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['ticklen'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.major.size']
+    assert ax.rcParams_layout['yaxis']['ticklen'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.major.size']
+
+
+def test_set_rcparams_layout_ticks_width_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick width
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['tickwidth'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.major.width']
+    assert ax.rcParams_layout['yaxis']['tickwidth'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.major.width']
+
+
+def test_set_rcparams_layout_ticks_width_rcparams():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick width
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['tickwidth'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.major.width']
+    assert ax.rcParams_layout['yaxis']['tickwidth'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.major.width']
+
+
+def test_set_rcparams_layout_ticks_color_defaults():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick width
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.color']
+    assert ax.rcParams_layout['yaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.color']
+
+
+def test_set_rcparams_layout_ticks_color_rcparams():
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    # Tick color
+    ax._set_rcparams_layout()
+    assert ax.rcParams_layout['xaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.color']
+    assert ax.rcParams_layout['yaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.color']

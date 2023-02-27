@@ -28,7 +28,13 @@ class Matly:
                 'zeroline': False,
                 'linecolor': None,
                 'linewidth': None,
-                'mirror': None
+                'mirror': None,
+                'ticks': None,
+                'ticklen': None,
+                'tickwidth': None,
+                'color': None,
+                'tickfont': {'family': None, 'size': None},
+                'side': None
             },
             'yaxis': {
                 'tickfont': dict(),
@@ -37,7 +43,13 @@ class Matly:
                 'zeroline': False,
                 'linecolor': None,
                 'linewidth': None,
-                'mirror': None
+                'mirror': None,
+                'ticks': None,
+                'ticklen': None,
+                'tickwidth': None,
+                'color': None,
+                'tickfont': {'family': None, 'size': None},
+                'side': None
             },
             'title': {'font': {'size': None, 'color': None}},
             'plot_bgcolor': None,
@@ -119,6 +131,58 @@ class Matly:
             elif grid_type == 'both':
                 self.rcParams_layout['xaxis']['showgrid'] = True
                 self.rcParams_layout['yaxis']['showgrid'] = True
+
+        # -----------
+        # -- Ticks --
+        # -----------
+
+        # Turn on / off xticks
+        xtick_top = rcParams.get('xtick.top', MATLY_RCPARAMS_DEFAULTS['xtick.top'])
+        xtick_bottom = rcParams.get('xtick.bottom', MATLY_RCPARAMS_DEFAULTS['xtick.bottom'])
+        if xtick_bottom & (not xtick_top):
+            self.rcParams_layout['xaxis']['side'] = 'bottom'
+        elif xtick_top & (not xtick_bottom):
+            self.rcParams_layout['xaxis']['side'] = 'top'
+        elif xtick_bottom & xtick_top:
+            self.rcParams_layout['xaxis']['side'] = 'bottom'
+            self.rcParams_layout['xaxis']['mirror'] = 'allticks'
+
+        # Turn on / off yticks
+        ytick_left = rcParams.get('ytick.left', MATLY_RCPARAMS_DEFAULTS['ytick.left'])
+        ytick_right = rcParams.get('ytick.right', MATLY_RCPARAMS_DEFAULTS['ytick.right'])
+        if ytick_right & (not ytick_left):
+            self.rcParams_layout['yaxis']['side'] = 'right'
+        elif ytick_left & (not ytick_right):
+            self.rcParams_layout['yaxis']['side'] = 'left'
+        elif ytick_right & ytick_left:
+            self.rcParams_layout['yaxis']['side'] = 'right'
+            self.rcParams_layout['yaxis']['mirror'] = 'allticks'
+
+        # Set ticks inside or outside axes
+        if rcParams.get('xtick.direction', MATLY_RCPARAMS_DEFAULTS['xtick.direction']) == 'in':
+            self.rcParams_layout['xaxis']['ticks'] = 'inside'
+        elif rcParams.get('xtick.direction', MATLY_RCPARAMS_DEFAULTS['xtick.direction']) == 'out':
+            self.rcParams_layout['xaxis']['ticks'] = 'outside'
+        if rcParams.get('ytick.direction', MATLY_RCPARAMS_DEFAULTS['ytick.direction']) == 'in':
+            self.rcParams_layout['yaxis']['ticks'] = 'inside'
+        elif rcParams.get('ytick.direction', MATLY_RCPARAMS_DEFAULTS['ytick.direction']) == 'out':
+            self.rcParams_layout['yaxis']['ticks'] = 'outside'
+
+        # Set ticks size
+        self.rcParams_layout['xaxis']['ticklen'] = rcParams.get(
+            'xtick.major.size', MATLY_RCPARAMS_DEFAULTS['xtick.major.size'])
+        self.rcParams_layout['yaxis']['ticklen'] = rcParams.get(
+            'ytick.major.size', MATLY_RCPARAMS_DEFAULTS['ytick.major.size'])
+        self.rcParams_layout['xaxis']['tickwidth'] = rcParams.get(
+            'xtick.major.width', MATLY_RCPARAMS_DEFAULTS['xtick.major.width'])
+        self.rcParams_layout['yaxis']['tickwidth'] = rcParams.get(
+            'ytick.major.width', MATLY_RCPARAMS_DEFAULTS['ytick.major.width'])
+
+        # Set ticks color
+        self.rcParams_layout['xaxis']['color'] = rcParams.get(
+            'xtick.color', MATLY_RCPARAMS_DEFAULTS['xtick.color'])
+        self.rcParams_layout['yaxis']['color'] = rcParams.get(
+            'ytick.color', MATLY_RCPARAMS_DEFAULTS['ytick.color'])
 
 
 class figureHandle(go.Figure):

@@ -19,6 +19,12 @@ xtick.major.width : 2
 ytick.major.width : 0
 xtick.major.size : 5
 ytick.major.size : 0
+xtick.bottom : True
+xtick.top : False
+ytick.left : True
+ytick.right : False
+xtick.direction : out
+ytick.direction : out
 
 # -- Fonts --
 font.size : 16
