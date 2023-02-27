@@ -9,6 +9,10 @@ os.environ['matly_stylesheet'] = f"{INCLUDED_STYLESHEET_FOLDER}/matly.mplstyle"
 
 def _read_stylesheet_from_os():
     path = os.environ.get('matly_stylesheet')
+    return _read_stylesheet_from_path(path)
+
+
+def _read_stylesheet_from_path(path):
     with open(path, 'r') as file:
         lines = file.readlines()
     return lines
@@ -28,8 +32,11 @@ def _try_eval(value):
         return value
 
 
-def convert_stylesheet_to_dict():
-    lines = _read_stylesheet_from_os()
+def convert_stylesheet_to_dict(path=None):
+    if path is None:
+        lines = _read_stylesheet_from_os()
+    else:
+        lines = _read_stylesheet_from_path(path)
     lines = [line for line in lines if line.strip() != '']
     lines = [line for line in lines if line[0] != '#']
     key_value_pairs = [_split_stylesheet_line(line) for line in lines]
