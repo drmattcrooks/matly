@@ -56,6 +56,12 @@ class Matly:
             'paper_bgcolor': None
         }
 
+        self.rcparams_lines = {
+            'width': None,
+            'dash': None,
+            'color': None
+        }
+
 
     def plot(self, *args):
         kwargs = {
@@ -85,7 +91,6 @@ class Matly:
 
     def _get_plot_defaults(self):
         return go.Scatter()
-
 
     def _set_rcparams_layout(self):
         # Set values of layout parameters
@@ -184,7 +189,6 @@ class Matly:
         self.rcParams_layout['yaxis']['color'] = rcParams.get(
             'ytick.color', MATLY_RCPARAMS_DEFAULTS['ytick.color'])
 
-
     def _set_rcparams_spines(self):
         self.rcParams_spines = {
             label: SpineClass(
@@ -200,6 +204,11 @@ class Matly:
             )
             for label in ['top', 'left', 'bottom', 'right']
         }
+
+    def _set_rcparams_lines(self):
+        self.rcparams_lines['width'] = _get_rcparam_value('lines.linewidth')
+        self.rcparams_lines['dash'] = _get_rcparam_value('lines.linestyle')
+        self.rcparams_lines['color'] = _get_rcparam_value('lines.color')
 
 
 class figureHandle(go.Figure):
@@ -231,3 +240,10 @@ class SpineClass:
             'color': color
         }
         self.label = label
+
+
+def _get_rcparam_value(parameter):
+    return rcParams.get(
+        parameter,
+        MATLY_RCPARAMS_DEFAULTS[parameter]
+    )

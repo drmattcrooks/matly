@@ -30,6 +30,8 @@ def _try_eval(value):
         return eval(value)
     except NameError:
         return value
+    except SyntaxError:
+        return value
 
 
 def convert_stylesheet_to_dict(path=None):

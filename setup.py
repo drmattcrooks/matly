@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='matly',
-    version='0.3.4',
+    version='0.3.5',
     license='',
     description='matplotlib syntax for plotly',
     packages=find_packages('src'),

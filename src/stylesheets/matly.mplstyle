@@ -42,3 +42,5 @@ savefig.dpi : 500
 
 # -- Plot Styles --
 lines.linewidth : 3
+lines.linestyle : -
+lines.color : steelblue
