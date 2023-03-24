@@ -688,3 +688,25 @@ def test_set_rcparams_spines_defaults(spine_mock):
         'right': spine_mock.return_value,
         'bottom': spine_mock.return_value
     }
+
+
+@patch.object(matly.matly_class, 'SpineClass', return_value=Mock())
+def test_set_rcparams_spines_rcparams(spine_mock):
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT_NONE
+    matly.matly_class.rcParams = MOCKED_RCPARAMS_LAYOUT_DICT
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_spines()
+
+    assert spine_mock.call_count == 4
+    args_list = spine_mock.call_args_list
+    assert args_list[0][0] == ('top', False, 'mockGrey')
+    assert args_list[1][0] == ('left', True, 'mockGrey')
+    assert args_list[2][0] == ('bottom', True, 'mockGrey')
+    assert args_list[3][0] == ('right', False, 'mockGrey')
+    assert ax.rcParams_spines == {
+        'top': spine_mock.return_value,
+        'left': spine_mock.return_value,
+        'right': spine_mock.return_value,
+        'bottom': spine_mock.return_value
+    }
