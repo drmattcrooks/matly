@@ -25,6 +25,10 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'axes.facecolor': 'mockGrey',
     'axes.grid': False,
     'axes.grid.axis': 'x',
+    'axes.spines.left': True,
+    'axes.spines.bottom': True,
+    'axes.spines.top': False,
+    'axes.spines.right': False,
     'xtick.bottom': True,
     'xtick.top': False,
     'ytick.left': True,
@@ -36,7 +40,7 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'xtick.major.width': 2,
     'ytick.major.width': 2,
     'xtick.color': 'Mockgrey',
-    'ytick.color': 'Mockred',
+    'ytick.color': 'Mockred'
 }
 MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.edgecolor': None,
@@ -46,6 +50,10 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.facecolor': None,
     'axes.grid': None,
     'axes.grid.axis': None,
+    'axes.spines.left': None,
+    'axes.spines.bottom': None,
+    'axes.spines.top': None,
+    'axes.spines.right': None,
     'xtick.bottom': None,
     'xtick.top': None,
     'ytick.left': None,
@@ -645,3 +653,38 @@ def test_set_rcparams_layout_ticks_color_rcparams():
     ax._set_rcparams_layout()
     assert ax.rcParams_layout['xaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['xtick.color']
     assert ax.rcParams_layout['yaxis']['color'] == MOCKED_RCPARAMS_LAYOUT_DICT['ytick.color']
+
+
+def test_set_rcparams_spines_structure():
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ## Check for tick parameters
+    assert '_set_rcparams_spines' in dir(ax)
+
+    ax._set_rcparams_spines()
+
+    assert 'rcParams_spines' in dir(ax)
+    assert type(ax.rcParams_spines) == dict
+    assert sorted(list(ax.rcParams_spines.keys())) == sorted(['bottom', 'left', 'right', 'top'])
+
+
+@patch.object(matly.matly_class, 'SpineClass', return_value=Mock())
+def test_set_rcparams_spines_defaults(spine_mock):
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = MOCKED_RCPARAMS_LAYOUT_DICT
+    matly.matly_class.rcParams = dict()
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_spines()
+
+    assert spine_mock.call_count == 4
+    args_list = spine_mock.call_args_list
+    assert args_list[0][0] == ('top', False, 'mockGrey')
+    assert args_list[1][0] == ('left', True, 'mockGrey')
+    assert args_list[2][0] == ('bottom', True, 'mockGrey')
+    assert args_list[3][0] == ('right', False, 'mockGrey')
+    assert ax.rcParams_spines == {
+        'top': spine_mock.return_value,
+        'left': spine_mock.return_value,
+        'right': spine_mock.return_value,
+        'bottom': spine_mock.return_value
+    }
