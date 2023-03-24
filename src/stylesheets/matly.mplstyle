@@ -1,5 +1,5 @@
 # -- Axes --
-#axes.spines.bottom : True
+axes.spines.bottom : True
 axes.spines.left : False
 axes.spines.right : False
 axes.spines.top : False

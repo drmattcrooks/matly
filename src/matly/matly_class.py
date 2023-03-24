@@ -185,6 +185,23 @@ class Matly:
             'ytick.color', MATLY_RCPARAMS_DEFAULTS['ytick.color'])
 
 
+    def _set_rcparams_spines(self):
+        self.rcParams_spines = {
+            label: SpineClass(
+                label,
+                rcParams.get(
+                    f"axes.spines.{label}",
+                    MATLY_RCPARAMS_DEFAULTS[f"axes.spines.{label}"]
+                ),
+                rcParams.get(
+                    'axes.edgecolor',
+                    MATLY_RCPARAMS_DEFAULTS['axes.edgecolor']
+                ),
+            )
+            for label in ['top', 'left', 'bottom', 'right']
+        }
+
+
 class figureHandle(go.Figure):
     def __init__(self, *args, **kwargs):
         data = kwargs.get('data', ())
@@ -205,3 +222,12 @@ class figureHandle(go.Figure):
             image = convert_from_bytes(open(f"{filename[:-4]}.pdf", 'rb').read())[0]
             image.save(filename)
         os.remove(f"{filename[:-4]}.pdf")
+
+
+class SpineClass:
+    def __init__(self, label, visible, color):
+        self.spine = {
+            'visible': visible,
+            'color': color
+        }
+        self.label = label
