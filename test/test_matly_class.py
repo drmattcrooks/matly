@@ -1,4 +1,4 @@
-from unittest.mock import patch, mock_open, Mock
+from unittest.mock import patch, mock_open, Mock, call
 from pdf2image import convert_from_bytes
 
 from matly.matly_class import Matly, figureHandle
@@ -40,7 +40,8 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'xtick.major.width': 2,
     'ytick.major.width': 2,
     'xtick.color': 'Mockgrey',
-    'ytick.color': 'Mockred'
+    'ytick.color': 'Mockred',
+    'lines.linewidth': 1.5
 }
 MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.edgecolor': None,
@@ -65,7 +66,8 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'xtick.major.width': None,
     'ytick.major.width': None,
     'xtick.color': None,
-    'ytick.color': None
+    'ytick.color': None,
+    'lines.linewidth': None
 }
 
 
@@ -225,6 +227,20 @@ def test_plot_add_trace():
     ax.fig.add_trace = Mock()
     ax._plot(**MOCKED_UPLOT_KWARGS)
     ax.fig.add_trace.assert_called()
+
+
+def test_get_rcparam_value_returns_rcparam_value():
+    matly.matly_class.rcParams = {'p1': 'v1'}
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = {'p1': 'v2'}
+
+    assert matly.matly_class._get_rcparam_value('p1') == 'v1'
+
+
+def test_get_rcparam_value_returns_rcparam_value():
+    matly.matly_class.rcParams = dict()
+    matly.matly_class.MATLY_RCPARAMS_DEFAULTS = {'p1': 'v2'}
+
+    assert matly.matly_class._get_rcparam_value('p1') == 'v2'
 
 
 def test_set_rcparams_layout_structure():
@@ -710,3 +726,29 @@ def test_set_rcparams_spines_rcparams(spine_mock):
         'right': spine_mock.return_value,
         'bottom': spine_mock.return_value
     }
+
+
+def test_set_rcparams_lines_structure():
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert 'rcparams_lines' in dir(ax)
+    assert type(ax.rcparams_lines) == dict
+    assert 'width' in list(ax.rcparams_lines)
+    assert 'dash' in list(ax.rcparams_lines)
+    assert 'color' in list(ax.rcparams_lines)
+
+
+@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
+def test_set_rcparams_lines(rcparam_mock):
+    rcparam_returns = [Mock(), Mock(), Mock()]
+    rcparam_mock.side_effect = tuple(rcparam_returns)
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_lines()
+
+    assert rcparam_mock.call_count == 3
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [call('lines.linewidth'), call('lines.linestyle'), call('lines.color')]
+    assert ax.rcparams_lines['width'] == rcparam_returns[0]
+    assert ax.rcparams_lines['dash'] == rcparam_returns[1]
+    assert ax.rcparams_lines['color'] == rcparam_returns[2]
