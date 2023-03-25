@@ -56,6 +56,13 @@ class Matly:
             'paper_bgcolor': None
         }
 
+        self.rcparams_spines = {
+            'bottom': None,
+            'left': None,
+            'right': None,
+            'top': None
+        }
+
         self.rcparams_lines = {
             'width': None,
             'dash': None,
@@ -92,41 +99,29 @@ class Matly:
     def _get_plot_defaults(self):
         return go.Scatter()
 
-    def _set_rcparams_layout(self):
-        # Set values of layout parameters
-        self.rcParams_layout['xaxis']['linecolor'] = rcParams.get(
-            'axes.edgecolor', MATLY_RCPARAMS_DEFAULTS['axes.edgecolor'])
-        self.rcParams_layout['xaxis']['linewidth'] = float(rcParams.get(
-            'axes.linewidth', MATLY_RCPARAMS_DEFAULTS['axes.linewidth']))
-        self.rcParams_layout['yaxis']['linecolor'] = rcParams.get(
-            'axes.edgecolor', MATLY_RCPARAMS_DEFAULTS['axes.edgecolor'])
-        self.rcParams_layout['yaxis']['linewidth'] = float(rcParams.get(
-            'axes.linewidth', MATLY_RCPARAMS_DEFAULTS['axes.linewidth']))
+    def _set_rcparams_layout_axis_color_and_width(self):
+        self.rcParams_layout['xaxis']['linecolor'] = _get_rcparam_value('axes.edgecolor')
+        self.rcParams_layout['xaxis']['linewidth'] = _get_rcparam_value('axes.linewidth')
+        self.rcParams_layout['yaxis']['linecolor'] = _get_rcparam_value('axes.edgecolor')
+        self.rcParams_layout['yaxis']['linewidth'] = _get_rcparam_value('axes.linewidth')
 
-        # Set background color
-        self.rcParams_layout['plot_bgcolor'] = rcParams.get(
-            'axes.facecolor', MATLY_RCPARAMS_DEFAULTS['axes.facecolor'])
-        self.rcParams_layout['paper_bgcolor'] = rcParams.get(
-            'axes.facecolor', MATLY_RCPARAMS_DEFAULTS['axes.facecolor'])
+    def _set_rcparams_layout_background_color(self):
+        self.rcParams_layout['plot_bgcolor'] = _get_rcparam_value('axes.facecolor')
+        self.rcParams_layout['paper_bgcolor'] = _get_rcparam_value('axes.facecolor')
 
-        # Axis label fonts
-        self.rcParams_layout['title']['font']['size'] = rcParams.get(
-            'axes.labelsize', MATLY_RCPARAMS_DEFAULTS['axes.labelsize'])
-        self.rcParams_layout['xaxis']['title']['font']['size'] = rcParams.get(
-            'axes.labelsize', MATLY_RCPARAMS_DEFAULTS['axes.labelsize'])
-        self.rcParams_layout['xaxis']['title']['font']['color'] = rcParams.get(
-            'axes.labelcolor', MATLY_RCPARAMS_DEFAULTS['axes.labelcolor'])
-        self.rcParams_layout['yaxis']['title']['font']['size'] = rcParams.get(
-            'axes.labelsize', MATLY_RCPARAMS_DEFAULTS['axes.labelsize'])
-        self.rcParams_layout['yaxis']['title']['font']['color'] = rcParams.get(
-            'axes.labelcolor', MATLY_RCPARAMS_DEFAULTS['axes.labelcolor'])
+    def _set_rcparams_layout_axis_label_fonts(self):
+        self.rcParams_layout['title']['font']['size'] = _get_rcparam_value('axes.labelsize')
+        self.rcParams_layout['xaxis']['title']['font']['size'] = _get_rcparam_value('axes.labelsize')
+        self.rcParams_layout['xaxis']['title']['font']['color'] = _get_rcparam_value('axes.labelcolor')
+        self.rcParams_layout['yaxis']['title']['font']['size'] = _get_rcparam_value('axes.labelsize')
+        self.rcParams_layout['yaxis']['title']['font']['color'] = _get_rcparam_value('axes.labelcolor')
 
-        # Grids
-        if not rcParams.get('axes.grid', MATLY_RCPARAMS_DEFAULTS['axes.grid']):
+    def _set_rcparams_layout_grid(self):
+        if not _get_rcparam_value('axes.grid'):
             self.rcParams_layout['xaxis']['showgrid'] = False
             self.rcParams_layout['yaxis']['showgrid'] = False
         else:
-            grid_type = rcParams.get('axes.grid.axis', MATLY_RCPARAMS_DEFAULTS['axes.grid.axis'])
+            grid_type = _get_rcparam_value('axes.grid.axis')
             if grid_type == 'x':
                 self.rcParams_layout['xaxis']['showgrid'] = True
                 self.rcParams_layout['yaxis']['showgrid'] = False
@@ -137,13 +132,9 @@ class Matly:
                 self.rcParams_layout['xaxis']['showgrid'] = True
                 self.rcParams_layout['yaxis']['showgrid'] = True
 
-        # -----------
-        # -- Ticks --
-        # -----------
-
-        # Turn on / off xticks
-        xtick_top = rcParams.get('xtick.top', MATLY_RCPARAMS_DEFAULTS['xtick.top'])
-        xtick_bottom = rcParams.get('xtick.bottom', MATLY_RCPARAMS_DEFAULTS['xtick.bottom'])
+    def _set_rcparams_layout_xticks(self):
+        xtick_top = _get_rcparam_value('xtick.top')
+        xtick_bottom = _get_rcparam_value('xtick.bottom')
         if xtick_bottom & (not xtick_top):
             self.rcParams_layout['xaxis']['side'] = 'bottom'
         elif xtick_top & (not xtick_bottom):
@@ -152,55 +143,76 @@ class Matly:
             self.rcParams_layout['xaxis']['side'] = 'bottom'
             self.rcParams_layout['xaxis']['mirror'] = 'allticks'
 
-        # Turn on / off yticks
-        ytick_left = rcParams.get('ytick.left', MATLY_RCPARAMS_DEFAULTS['ytick.left'])
-        ytick_right = rcParams.get('ytick.right', MATLY_RCPARAMS_DEFAULTS['ytick.right'])
+    def _set_rcparams_layout_yticks(self):
+        ytick_left = _get_rcparam_value('ytick.left')
+        ytick_right = _get_rcparam_value('ytick.right')
         if ytick_right & (not ytick_left):
             self.rcParams_layout['yaxis']['side'] = 'right'
         elif ytick_left & (not ytick_right):
             self.rcParams_layout['yaxis']['side'] = 'left'
         elif ytick_right & ytick_left:
-            self.rcParams_layout['yaxis']['side'] = 'right'
+            self.rcParams_layout['yaxis']['side'] = 'left'
             self.rcParams_layout['yaxis']['mirror'] = 'allticks'
 
-        # Set ticks inside or outside axes
-        if rcParams.get('xtick.direction', MATLY_RCPARAMS_DEFAULTS['xtick.direction']) == 'in':
+    def _set_rcparams_layout_ticks_inside_out(self):
+        if _get_rcparam_value('xtick.direction') == 'in':
             self.rcParams_layout['xaxis']['ticks'] = 'inside'
-        elif rcParams.get('xtick.direction', MATLY_RCPARAMS_DEFAULTS['xtick.direction']) == 'out':
+        elif _get_rcparam_value('xtick.direction') == 'out':
             self.rcParams_layout['xaxis']['ticks'] = 'outside'
-        if rcParams.get('ytick.direction', MATLY_RCPARAMS_DEFAULTS['ytick.direction']) == 'in':
+
+        if _get_rcparam_value('ytick.direction') == 'in':
             self.rcParams_layout['yaxis']['ticks'] = 'inside'
-        elif rcParams.get('ytick.direction', MATLY_RCPARAMS_DEFAULTS['ytick.direction']) == 'out':
+        elif _get_rcparam_value('ytick.direction') == 'out':
             self.rcParams_layout['yaxis']['ticks'] = 'outside'
 
+    def _set_rcparams_layout_tick_size(self):
+        self.rcParams_layout['xaxis']['ticklen'] = _get_rcparam_value('xtick.major.size')
+        self.rcParams_layout['yaxis']['ticklen'] = _get_rcparam_value('ytick.major.size')
+        self.rcParams_layout['xaxis']['tickwidth'] = _get_rcparam_value('xtick.major.width')
+        self.rcParams_layout['yaxis']['tickwidth'] = _get_rcparam_value('ytick.major.width')
+
+    def _set_rcparams_layout_tick_color(self):
+        self.rcParams_layout['xaxis']['color'] = _get_rcparam_value('xtick.color')
+        self.rcParams_layout['yaxis']['color'] = _get_rcparam_value('ytick.color')
+
+    def _set_rcparams_layout(self):
+        # Set values of layout parameters
+        self._set_rcparams_layout_axis_color_and_width()
+
+        # Set background color
+        self._set_rcparams_layout_background_color()
+
+        # Axis label fonts
+        self._set_rcparams_layout_axis_label_fonts()
+
+        # Grids
+        self._set_rcparams_layout_grid()
+
+        # -----------
+        # -- Ticks --
+        # -----------
+
+        # Turn on / off xticks
+        self._set_rcparams_layout_xticks()
+
+        # Turn on / off yticks
+        self._set_rcparams_layout_yticks()
+
+        # Set ticks inside or outside axes
+        self._set_rcparams_layout_ticks_inside_out()
+
         # Set ticks size
-        self.rcParams_layout['xaxis']['ticklen'] = rcParams.get(
-            'xtick.major.size', MATLY_RCPARAMS_DEFAULTS['xtick.major.size'])
-        self.rcParams_layout['yaxis']['ticklen'] = rcParams.get(
-            'ytick.major.size', MATLY_RCPARAMS_DEFAULTS['ytick.major.size'])
-        self.rcParams_layout['xaxis']['tickwidth'] = rcParams.get(
-            'xtick.major.width', MATLY_RCPARAMS_DEFAULTS['xtick.major.width'])
-        self.rcParams_layout['yaxis']['tickwidth'] = rcParams.get(
-            'ytick.major.width', MATLY_RCPARAMS_DEFAULTS['ytick.major.width'])
+        self._set_rcparams_layout_tick_size()
 
         # Set ticks color
-        self.rcParams_layout['xaxis']['color'] = rcParams.get(
-            'xtick.color', MATLY_RCPARAMS_DEFAULTS['xtick.color'])
-        self.rcParams_layout['yaxis']['color'] = rcParams.get(
-            'ytick.color', MATLY_RCPARAMS_DEFAULTS['ytick.color'])
+        self._set_rcparams_layout_tick_color()
 
     def _set_rcparams_spines(self):
         self.rcParams_spines = {
             label: SpineClass(
                 label,
-                rcParams.get(
-                    f"axes.spines.{label}",
-                    MATLY_RCPARAMS_DEFAULTS[f"axes.spines.{label}"]
-                ),
-                rcParams.get(
-                    'axes.edgecolor',
-                    MATLY_RCPARAMS_DEFAULTS['axes.edgecolor']
-                ),
+                _get_rcparam_value(f"axes.spines.{label}"),
+                _get_rcparam_value('axes.edgecolor'),
             )
             for label in ['top', 'left', 'bottom', 'right']
         }
