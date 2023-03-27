@@ -333,39 +333,69 @@ def test_set_rcparams_layout_grid_none(params_mock, _):
 
 
 @patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-@patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'x'])
+@patch.object(
+    matly.matly_class,
+    '_get_rcparam_value',
+    side_effect=[True, 'x', 'greyx', 3.1415]
+)
 def test_set_rcparams_layout_grid_x(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
-    assert params_mock.call_count == 2
-    params_mock.call_args_list == [call('axes.grid'), call('axes.grid.axis')]
+    assert params_mock.call_count == 4
+    params_mock.call_args_list == [
+        call('axes.grid'), call('axes.grid.axis'),
+        call('grid.color'), call('grid.linewidth')
+    ]
     ax.rcParams_layout['xaxis']['showgrid'] == True
     ax.rcParams_layout['yaxis']['showgrid'] == False
+    ax.rcParams_layout['xaxis']['gridcolor'] == 'greyx'
+    ax.rcParams_layout['xaxis']['gridwidth'] == 3.1415
 
 
 @patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-@patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'y'])
+@patch.object(
+    matly.matly_class,
+    '_get_rcparam_value',
+    side_effect=[True, 'y', 'greyx', 3.1415]
+)
 def test_set_rcparams_layout_grid_y(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
-    assert params_mock.call_count == 2
-    params_mock.call_args_list == [call('axes.grid'), call('axes.grid.axis')]
+    assert params_mock.call_count == 4
+    params_mock.call_args_list == [
+        call('axes.grid'), call('axes.grid.axis'),
+        call('grid.color'), call('grid.linewidth')
+    ]
     ax.rcParams_layout['xaxis']['showgrid'] == False
     ax.rcParams_layout['yaxis']['showgrid'] == True
+    ax.rcParams_layout['yaxis']['gridcolor'] == 'greyx'
+    ax.rcParams_layout['yaxis']['gridwidth'] == 3.1415
 
 
 @patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-@patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'both'])
+@patch.object(
+    matly.matly_class,
+    '_get_rcparam_value',
+    side_effect=[True, 'both', 'greyx', 3.1415, 'greyx', 3.1415]
+)
 def test_set_rcparams_layout_grid_both(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
-    assert params_mock.call_count == 2
-    params_mock.call_args_list == [call('axes.grid'), call('axes.grid.axis')]
+    assert params_mock.call_count == 6
+    params_mock.call_args_list == [
+        call('axes.grid'), call('axes.grid.axis'),
+        call('grid.color'), call('grid.linewidth'),
+        call('grid.color'), call('grid.linewidth')
+    ]
     ax.rcParams_layout['xaxis']['showgrid'] == True
     ax.rcParams_layout['yaxis']['showgrid'] == True
+    ax.rcParams_layout['xaxis']['gridcolor'] == 'greyx'
+    ax.rcParams_layout['xaxis']['gridwidth'] == 3.1415
+    ax.rcParams_layout['yaxis']['gridcolor'] == 'greyx'
+    ax.rcParams_layout['yaxis']['gridwidth'] == 3.1415
 
 
 @patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())

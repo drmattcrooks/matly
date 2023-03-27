@@ -31,6 +31,7 @@ class Matly:
                 'tickfont': dict(),
                 'title': {'font': dict()},
                 'showgrid': None,
+                'gridcolor': None,
                 'zeroline': False,
                 'linecolor': None,
                 'linewidth': None,
@@ -46,6 +47,7 @@ class Matly:
                 'tickfont': dict(),
                 'title': {'font': dict()},
                 'showgrid': None,
+                'gridcolor': None,
                 'zeroline': False,
                 'linecolor': None,
                 'linewidth': None,
@@ -165,12 +167,20 @@ class Matly:
             if grid_type == 'x':
                 self.rcParams_layout['xaxis']['showgrid'] = True
                 self.rcParams_layout['yaxis']['showgrid'] = False
+                self.rcParams_layout['xaxis']['gridcolor'] = _get_rcparam_value('grid.color')
+                self.rcParams_layout['xaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
             elif grid_type == 'y':
                 self.rcParams_layout['xaxis']['showgrid'] = False
                 self.rcParams_layout['yaxis']['showgrid'] = True
+                self.rcParams_layout['yaxis']['gridcolor'] = _get_rcparam_value('grid.color')
+                self.rcParams_layout['yaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
             elif grid_type == 'both':
                 self.rcParams_layout['xaxis']['showgrid'] = True
                 self.rcParams_layout['yaxis']['showgrid'] = True
+                self.rcParams_layout['xaxis']['gridcolor'] = _get_rcparam_value('grid.color')
+                self.rcParams_layout['xaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
+                self.rcParams_layout['yaxis']['gridcolor'] = _get_rcparam_value('grid.color')
+                self.rcParams_layout['yaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
 
     def _set_rcparams_layout_xticks(self):
         xtick_top = _get_rcparam_value('xtick.top')
