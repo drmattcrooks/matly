@@ -91,6 +91,10 @@ class Matly:
             'size': None
         }
 
+        self.rcparams_figsize = {
+            'figsize': None
+        }
+
     def plot(self, *args):
         kwargs = {
             'x': None,
@@ -259,6 +263,9 @@ class Matly:
         self.rcparams_font['family'] = _get_rcparam_value('font.family')
         self.rcparams_font['weight'] = _get_rcparam_value('font.weight')
         self.rcparams_font['size'] = _get_rcparam_value('font.size')
+
+    def _set_rcparams_figsize(self):
+        self.rcparams_figsize['figsize'] = _get_rcparam_value('figure.figsize')
 
 
 class figureHandle(go.Figure):

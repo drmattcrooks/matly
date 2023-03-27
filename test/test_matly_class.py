@@ -728,3 +728,19 @@ def test_set_rcparams_font(rcparam_mock):
     assert ax.rcparams_font['family'] == rcparam_returns[0]
     assert ax.rcparams_font['weight'] == rcparam_returns[1]
     assert ax.rcparams_font['size'] == rcparam_returns[2]
+
+
+@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
+def test_figsize(rcparam_mock):
+    rcparam_returns = [Mock(), Mock(), Mock()]
+    rcparam_mock.side_effect = tuple(rcparam_returns)
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert ax.rcparams_figsize == {'figsize': None}
+
+    ax._set_rcparams_figsize()
+
+    assert rcparam_mock.call_count == 1
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [call('figure.figsize')]
+    assert ax.rcparams_figsize['figsize'] == rcparam_returns[0]
