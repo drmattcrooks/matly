@@ -660,3 +660,19 @@ def test_set_rcparams_lines(rcparam_mock):
     assert ax.rcparams_lines['width'] == rcparam_returns[0]
     assert ax.rcparams_lines['dash'] == rcparam_returns[1]
     assert ax.rcparams_lines['color'] == rcparam_returns[2]
+
+
+@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
+def test_set_rcparams_markers(rcparam_mock):
+    rcparam_returns = [Mock(), Mock(), Mock(), Mock(), Mock()]
+    rcparam_mock.side_effect = tuple(rcparam_returns)
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_markers()
+
+    assert rcparam_mock.call_count == 5
+    assert ax.rcparams_markers['symbol'] == rcparam_returns[0]
+    assert ax.rcparams_markers['color'] == rcparam_returns[1]
+    assert ax.rcparams_markers['size'] == rcparam_returns[2]
+    assert ax.rcparams_markers['line']['color'] == rcparam_returns[3]
+    assert ax.rcparams_markers['line']['width'] == rcparam_returns[4]
