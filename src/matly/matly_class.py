@@ -95,6 +95,15 @@ class Matly:
             'figsize': None
         }
 
+        self.rcparams_legend = {
+            'edgecolor': None,
+            'facecolor': None,
+            'fontsize': None,
+            'frameon': None,
+            'loc': None,
+            'title_fontsize': None
+        }
+
     def plot(self, *args):
         kwargs = {
             'x': None,
@@ -266,6 +275,14 @@ class Matly:
 
     def _set_rcparams_figsize(self):
         self.rcparams_figsize['figsize'] = _get_rcparam_value('figure.figsize')
+
+    def _set_rcparams_legend(self):
+        self.rcparams_legend['edgecolor'] = _get_rcparam_value('legend.edgecolor')
+        self.rcparams_legend['facecolor'] = _get_rcparam_value('legend.facecolor')
+        self.rcparams_legend['fontsize'] = _get_rcparam_value('legend.fontsize')
+        self.rcparams_legend['frameon'] = _get_rcparam_value('legend.frameon')
+        self.rcparams_legend['loc'] = _get_rcparam_value('legend.loc')
+        self.rcparams_legend['title_fontsize'] = _get_rcparam_value('legend.title_fontsize')
 
 
 class figureHandle(go.Figure):
