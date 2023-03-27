@@ -3,13 +3,14 @@ axes.spines.bottom : True
 axes.spines.left : False
 axes.spines.right : False
 axes.spines.top : False
-#axes.grid : True
+axes.grid : True
 axes.grid.axis : y
 grid.color : grey
 grid.linewidth : 0.5
 #axes.axisbelow : True
 axes.linewidth : 2
 axes.ymargin : 0
+axes.edgecolor : grey
 
 # -- Ticks and tick labels --
 axes.edgecolor : grey
@@ -27,11 +28,15 @@ xtick.direction : out
 ytick.direction : out
 
 # -- Fonts --
-font.size : 16
+font.size : 12
 font.family : serif
 font.weight: normal
 text.color : grey
 axes.labelcolor : grey
+axes.labelsize : 16
+
+# -- Background --
+axes.facecolor : white
 
 # -- Figure size --
 figure.figsize : (10, 7)
