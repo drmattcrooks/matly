@@ -754,3 +754,40 @@ def test_figsize(rcparam_mock):
     args_list = rcparam_mock.call_args_list
     assert args_list == [call('figure.figsize')]
     assert ax.rcparams_figsize['figsize'] == rcparam_returns[0]
+
+
+def test_rcparams_legend_structure():
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert 'rcparams_legend' in dir(ax)
+    assert type(ax.rcparams_legend) == dict
+    assert ax.rcparams_legend == {
+            'edgecolor': None,
+            'facecolor': None,
+            'fontsize': None,
+            'frameon': None,
+            'loc': None,
+            'title_fontsize': None
+        }
+
+
+@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
+def test_set_rcparams_legend(rcparam_mock):
+    rcparam_returns = [Mock(), Mock(), Mock(), Mock(), Mock(), Mock()]
+    rcparam_mock.side_effect = tuple(rcparam_returns)
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_legend()
+
+    assert rcparam_mock.call_count == 6
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [
+        call('legend.edgecolor'), call('legend.facecolor'), call('legend.fontsize'),
+        call('legend.frameon'), call('legend.loc'), call('legend.title_fontsize')
+    ]
+    assert ax.rcparams_legend['edgecolor'] == rcparam_returns[0]
+    assert ax.rcparams_legend['facecolor'] == rcparam_returns[1]
+    assert ax.rcparams_legend['fontsize'] == rcparam_returns[2]
+    assert ax.rcparams_legend['frameon'] == rcparam_returns[3]
+    assert ax.rcparams_legend['loc'] == rcparam_returns[4]
+    assert ax.rcparams_legend['title_fontsize'] == rcparam_returns[5]
