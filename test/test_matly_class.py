@@ -702,3 +702,29 @@ def test_set_rcparams_patch(rcparam_mock):
     assert ax.rcparams_patch['linewidth'] == rcparam_returns[0]
     assert ax.rcparams_patch['facecolor'] == rcparam_returns[1]
     assert ax.rcparams_patch['edgecolor'] == rcparam_returns[2]
+
+
+def test_rcparams_font_structure():
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert 'rcparams_font' in dir(ax)
+    assert type(ax.rcparams_font) == dict
+    assert ax.rcparams_font == {
+        'family': None,
+        'weight': None,
+        'size': None
+    }
+
+
+@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
+def test_set_rcparams_font(rcparam_mock):
+    rcparam_returns = [Mock(), Mock(), Mock()]
+    rcparam_mock.side_effect = tuple(rcparam_returns)
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_font()
+
+    assert rcparam_mock.call_count == 3
+    assert ax.rcparams_font['family'] == rcparam_returns[0]
+    assert ax.rcparams_font['weight'] == rcparam_returns[1]
+    assert ax.rcparams_font['size'] == rcparam_returns[2]

@@ -85,6 +85,12 @@ class Matly:
             'edgecolor': None
         }
 
+        self.rcparams_font = {
+            'family': None,
+            'weight': None,
+            'size': None
+        }
+
     def plot(self, *args):
         kwargs = {
             'x': None,
@@ -248,6 +254,11 @@ class Matly:
         self.rcparams_patch['linewidth'] = _get_rcparam_value('patch.linewidth')
         self.rcparams_patch['facecolor'] = _get_rcparam_value('patch.facecolor')
         self.rcparams_patch['edgecolor'] = _get_rcparam_value('patch.edgecolor')
+
+    def _set_rcparams_font(self):
+        self.rcparams_font['family'] = _get_rcparam_value('font.family')
+        self.rcparams_font['weight'] = _get_rcparam_value('font.weight')
+        self.rcparams_font['size'] = _get_rcparam_value('font.size')
 
 
 class figureHandle(go.Figure):
