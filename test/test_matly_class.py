@@ -23,6 +23,7 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'axes.labelsize': 10.1111111,
     'axes.labelcolor': 'mockRed',
     'axes.facecolor': 'mockGrey',
+    'axes.edgecolor': 'grey',
     'axes.grid': False,
     'axes.grid.axis': 'x',
     'axes.spines.left': True,
@@ -49,6 +50,7 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.labelsize': None,
     'axes.labelcolor': None,
     'axes.facecolor': None,
+    'axes.edgecolor': None,
     'axes.grid': None,
     'axes.grid.axis': None,
     'axes.spines.left': None,
@@ -71,7 +73,8 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
 }
 
 
-def test_matly_is_class():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_matly_is_class(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     assert ax.__class__.__name__ == 'Matly'
     assert ax.fig == MOCKED_MATLY_INIT_KWARGS['figure']
@@ -170,25 +173,26 @@ def test_get_plot_defaults_initiated_from_uplot():
     ax._get_plot_defaults.assert_called()
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_lines')
 @patch.object(matly.matly_class.go, 'Scatter', side_effect=Mock())
-def test_get_plot_defaults_returns_scatter(mocked_scatter):
+def test_get_plot_defaults_returns_scatter(mocked_scatter, lines_mock):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     returned_trace = ax._get_plot_defaults()
+    lines_mock.assert_called()
     assert returned_trace == mocked_scatter()
 
 
-def test_plot_update_trace():
+@patch.object(matly.matly_class.Matly, '_get_plot_defaults', return_value=Mock())
+def test_plot_update_trace(plot_def_mock):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
-    ax._get_plot_defaults = Mock()
-    ax._get_plot_defaults().update = Mock()
+    plot_def_mock.update = Mock()
+
     ax._plot(**MOCKED_UPLOT_KWARGS)
+
     ax._get_plot_defaults().update.assert_called()
     _, kwargs = ax._get_plot_defaults().update.call_args
-    expected_kwargs = dict(MOCKED_PLOT_STYLE_DICT)
-    for k, v in MOCKED_UPLOT_KWARGS.items():
-        expected_kwargs[k] = v
-
-    assert kwargs == expected_kwargs
+    assert kwargs['x'] == MOCKED_UPLOT_KWARGS['x']
+    assert kwargs['y'] == MOCKED_UPLOT_KWARGS['y']
 
 
 def test_plot_add_trace():
@@ -213,7 +217,8 @@ def test_get_rcparam_value_returns_rcparam_value():
     assert matly.matly_class._get_rcparam_value('p1') == 'v2'
 
 
-def test_set_rcparams_layout_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_set_rcparams_layout_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     ## Check for xaxis parameters
@@ -256,8 +261,9 @@ def test_set_rcparams_layout_structure():
     assert 'font' in ax.rcParams_layout['yaxis']['title']
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_layout_axis_color_and_width(rcparams_mock):
+def test_set_rcparams_layout_axis_color_and_width(rcparams_mock, _):
     rcparams_mock_returns = [Mock(), Mock(), Mock(), Mock()]
     rcparams_mock.side_effect = tuple(rcparams_mock_returns)
 
@@ -275,8 +281,9 @@ def test_set_rcparams_layout_axis_color_and_width(rcparams_mock):
     assert ax.rcParams_layout['yaxis']['linewidth'] == rcparams_mock_returns[3]
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_layout_background_color(rcparams_mock):
+def test_set_rcparams_layout_background_color(rcparams_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_background_color()
 
@@ -288,8 +295,9 @@ def test_set_rcparams_layout_background_color(rcparams_mock):
     assert ax.rcParams_layout['paper_bgcolor'] == rcparams_mock.return_value
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_layout_axis_label_fonts(rcparams_mock):
+def test_set_rcparams_layout_axis_label_fonts(rcparams_mock, _):
     size_mock = Mock()
     color_mock = Mock()
     rcparams_mock.side_effect = tuple([
@@ -312,8 +320,9 @@ def test_set_rcparams_layout_axis_label_fonts(rcparams_mock):
     assert ax.rcParams_layout['yaxis']['title']['font']['color'] == color_mock
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[False])
-def test_set_rcparams_layout_grid_none(params_mock):
+def test_set_rcparams_layout_grid_none(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
@@ -323,8 +332,9 @@ def test_set_rcparams_layout_grid_none(params_mock):
     ax.rcParams_layout['yaxis']['showgrid'] == False
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'x'])
-def test_set_rcparams_layout_grid_x(params_mock):
+def test_set_rcparams_layout_grid_x(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
@@ -334,8 +344,9 @@ def test_set_rcparams_layout_grid_x(params_mock):
     ax.rcParams_layout['yaxis']['showgrid'] == False
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'y'])
-def test_set_rcparams_layout_grid_y(params_mock):
+def test_set_rcparams_layout_grid_y(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
@@ -345,8 +356,9 @@ def test_set_rcparams_layout_grid_y(params_mock):
     ax.rcParams_layout['yaxis']['showgrid'] == True
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, 'both'])
-def test_set_rcparams_layout_grid_both(params_mock):
+def test_set_rcparams_layout_grid_both(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_grid()
 
@@ -356,8 +368,9 @@ def test_set_rcparams_layout_grid_both(params_mock):
     ax.rcParams_layout['yaxis']['showgrid'] == True
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[False, True])
-def test_set_rcparams_layout_xticks_bottom(params_mock):
+def test_set_rcparams_layout_xticks_bottom(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_xticks()
 
@@ -366,8 +379,9 @@ def test_set_rcparams_layout_xticks_bottom(params_mock):
     ax.rcParams_layout['xaxis']['side'] == 'bottom'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, False])
-def test_set_rcparams_layout_xticks_top(params_mock):
+def test_set_rcparams_layout_xticks_top(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_xticks()
 
@@ -376,8 +390,9 @@ def test_set_rcparams_layout_xticks_top(params_mock):
     ax.rcParams_layout['xaxis']['side'] == 'top'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, True])
-def test_set_rcparams_layout_xticks_both(params_mock):
+def test_set_rcparams_layout_xticks_both(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_xticks()
 
@@ -387,8 +402,9 @@ def test_set_rcparams_layout_xticks_both(params_mock):
     ax.rcParams_layout['xaxis']['mirror'] == 'allticks'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, False])
-def test_set_rcparams_layout_yticks_left(params_mock):
+def test_set_rcparams_layout_yticks_left(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_yticks()
 
@@ -397,8 +413,9 @@ def test_set_rcparams_layout_yticks_left(params_mock):
     ax.rcParams_layout['yaxis']['side'] == 'left'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[False, True])
-def test_set_rcparams_layout_yticks_right(params_mock):
+def test_set_rcparams_layout_yticks_right(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_yticks()
 
@@ -407,8 +424,9 @@ def test_set_rcparams_layout_yticks_right(params_mock):
     ax.rcParams_layout['yaxis']['side'] == 'right'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=[True, True])
-def test_set_rcparams_layout_yticks_both(params_mock):
+def test_set_rcparams_layout_yticks_both(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_yticks()
 
@@ -418,8 +436,9 @@ def test_set_rcparams_layout_yticks_both(params_mock):
     ax.rcParams_layout['yaxis']['mirror'] == 'allticks'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', side_effect=['in', 'in'])
-def test_set_rcparams_layout_ticks_inside_out_in(params_mock):
+def test_set_rcparams_layout_ticks_inside_out_in(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_ticks_inside_out()
 
@@ -429,8 +448,9 @@ def test_set_rcparams_layout_ticks_inside_out_in(params_mock):
     ax.rcParams_layout['yaxis']['ticks'] = 'inside'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value='out')
-def test_set_rcparams_layout_ticks_inside_out_out(params_mock):
+def test_set_rcparams_layout_ticks_inside_out_out(params_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     ax._set_rcparams_layout_ticks_inside_out()
 
@@ -443,8 +463,9 @@ def test_set_rcparams_layout_ticks_inside_out_out(params_mock):
     ax.rcParams_layout['yaxis']['ticks'] = 'outside'
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value')
-def test_set_rcparams_layout_tick_size(params_mock):
+def test_set_rcparams_layout_tick_size(params_mock, _):
     params_return_values = [Mock(), Mock(), Mock(), Mock()]
     params_mock.side_effect = params_return_values
 
@@ -462,8 +483,9 @@ def test_set_rcparams_layout_tick_size(params_mock):
     ax.rcParams_layout['yaxis']['tickwidth'] == params_return_values[3]
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value')
-def test_set_rcparams_layout_tick_color(params_mock):
+def test_set_rcparams_layout_tick_color(params_mock, _):
     params_return_values = [Mock(), Mock()]
     params_mock.side_effect = params_return_values
 
@@ -526,7 +548,6 @@ def test_set_rcparams_layout(
         tick_color_mock, tick_size_mock, inout_mock, ytick_mock, xtick_mock
 ):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
-    ax._set_rcparams_layout()
 
     color_width_mock.assert_called()
     background_mock.assert_called()
@@ -539,7 +560,8 @@ def test_set_rcparams_layout(
     xtick_mock.assert_called()
 
 
-def test_set_rcparams_layout_ticks_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_set_rcparams_layout_ticks_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     ## Check for tick parameters
@@ -577,14 +599,16 @@ def test_set_rcparams_layout_ticks_structure():
     assert 'ticks' in ax.rcParams_layout['yaxis']
 
 
-def test_rcparams_spines_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_rcparams_spines_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
     assert sorted(list(ax.rcparams_spines.keys())) == sorted(['bottom', 'left', 'right', 'top'])
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
 @patch.object(matly.matly_class, 'SpineClass', return_value=Mock())
-def test_set_rcparams_spines(spine_mock, rcparam_mock):
+def test_set_rcparams_spines(spine_mock, rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock(), Mock(), Mock(), Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
@@ -606,7 +630,8 @@ def test_set_rcparams_spines(spine_mock, rcparam_mock):
     }
 
 
-def test_set_rcparams_lines_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_set_rcparams_lines_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     assert 'rcparams_lines' in dir(ax)
@@ -616,10 +641,12 @@ def test_set_rcparams_lines_structure():
     assert 'color' in list(ax.rcparams_lines)
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_lines(rcparam_mock):
+def test_set_rcparams_lines(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
+    matly.matly_class.LINE_STYLE_DICT = {rcparam_returns[1]: 'dash'}
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     ax._set_rcparams_lines()
@@ -628,12 +655,13 @@ def test_set_rcparams_lines(rcparam_mock):
     args_list = rcparam_mock.call_args_list
     assert args_list == [call('lines.linewidth'), call('lines.linestyle'), call('lines.color')]
     assert ax.rcparams_lines['width'] == rcparam_returns[0]
-    assert ax.rcparams_lines['dash'] == rcparam_returns[1]
+    assert ax.rcparams_lines['dash'] == 'dash'
     assert ax.rcparams_lines['color'] == rcparam_returns[2]
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_markers(rcparam_mock):
+def test_set_rcparams_markers(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
@@ -654,7 +682,8 @@ def test_set_rcparams_markers(rcparam_mock):
     assert ax.rcparams_markers['line']['width'] == rcparam_returns[4]
 
 
-def test_rcparams_patch_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_rcparams_patch_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     assert 'rcparams_patch' in dir(ax)
@@ -666,8 +695,9 @@ def test_rcparams_patch_structure():
     }
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_patch(rcparam_mock):
+def test_set_rcparams_patch(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
@@ -682,7 +712,8 @@ def test_set_rcparams_patch(rcparam_mock):
     assert ax.rcparams_patch['edgecolor'] == rcparam_returns[2]
 
 
-def test_rcparams_font_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_rcparams_font_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     assert 'rcparams_font' in dir(ax)
@@ -694,8 +725,9 @@ def test_rcparams_font_structure():
     }
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_font(rcparam_mock):
+def test_set_rcparams_font(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
@@ -710,8 +742,9 @@ def test_set_rcparams_font(rcparam_mock):
     assert ax.rcparams_font['size'] == rcparam_returns[2]
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_figsize(rcparam_mock):
+def test_figsize(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
@@ -726,7 +759,8 @@ def test_figsize(rcparam_mock):
     assert ax.rcparams_figsize['figsize'] == rcparam_returns[0]
 
 
-def test_rcparams_legend_structure():
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_rcparams_legend_structure(_):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
     assert 'rcparams_legend' in dir(ax)
@@ -741,8 +775,9 @@ def test_rcparams_legend_structure():
         }
 
 
+@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
 @patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_legend(rcparam_mock):
+def test_set_rcparams_legend(rcparam_mock, _):
     rcparam_returns = [Mock(), Mock(), Mock(), Mock(), Mock(), Mock()]
     rcparam_mock.side_effect = tuple(rcparam_returns)
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)

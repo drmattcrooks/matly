@@ -13,6 +13,12 @@ PATH_TO_DEFAULT_RCPARAMS = f"{INCLUDED_STYLESHEET_FOLDER}/{DEFAULT_STYLESHEET}.m
 MATLY_RCPARAMS_DEFAULTS = convert_stylesheet_to_dict(
     path=PATH_TO_DEFAULT_RCPARAMS)
 
+
+LINE_STYLE_DICT = {
+    '--': 'dash',
+    '-': None
+}
+
 class Matly:
     def __init__(self, *args, **kwargs):
         try:
@@ -104,6 +110,10 @@ class Matly:
             'title_fontsize': None
         }
 
+        # set layout from rcparams
+        self._set_rcparams_layout()
+        self.fig.layout = self.rcParams_layout
+
     def plot(self, *args):
         kwargs = {
             'x': None,
@@ -119,19 +129,15 @@ class Matly:
 
     def _plot(self, **kwargs):
         plot_trace = self._get_plot_defaults()
-        plot_style_dict = {'line': dict(),
-                           'marker': {'line': dict()},
-                           'marker_symbol': None,
-                           'mode': 'lines'}
         plot_trace.update(
-            x = kwargs['x'],
-            y = kwargs['y'],
-            **plot_style_dict
+            x=kwargs['x'],
+            y=kwargs['y']
         )
         self.fig.add_trace(plot_trace)
 
     def _get_plot_defaults(self):
-        return go.Scatter()
+        self._set_rcparams_lines()
+        return go.Scatter(line=self.rcparams_lines, mode='lines')
 
     def _set_rcparams_layout_axis_color_and_width(self):
         self.rcParams_layout['xaxis']['linecolor'] = _get_rcparam_value('axes.edgecolor')
@@ -253,7 +259,8 @@ class Matly:
 
     def _set_rcparams_lines(self):
         self.rcparams_lines['width'] = _get_rcparam_value('lines.linewidth')
-        self.rcparams_lines['dash'] = _get_rcparam_value('lines.linestyle')
+        self.rcparams_lines['dash'] = LINE_STYLE_DICT[
+            _get_rcparam_value('lines.linestyle')]
         self.rcparams_lines['color'] = _get_rcparam_value('lines.color')
 
     def _set_rcparams_markers(self):
@@ -296,13 +303,6 @@ class figureHandle(go.Figure):
             self.write_image(filename)
         else:
             raise ValueError(f"Unrecognised file format in filename: {filename}")
-
-    # def save_png(self, filename):
-    #     with tempfile.TemporaryDirectory() as path:
-    #         self.write_image(f"{filename[:-4]}.pdf")
-    #         image = convert_from_bytes(open(f"{filename[:-4]}.pdf", 'rb').read())[0]
-    #         image.save(filename)
-    #     os.remove(f"{filename[:-4]}.pdf")
 
 
 class SpineClass:
