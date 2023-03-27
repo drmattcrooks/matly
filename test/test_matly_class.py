@@ -671,6 +671,12 @@ def test_set_rcparams_markers(rcparam_mock):
     ax._set_rcparams_markers()
 
     assert rcparam_mock.call_count == 5
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [
+        call('lines.marker'), call('lines.markerfacecolor'),
+        call('lines.markersize'), call('lines.markeredgecolor'),
+        call('lines.markeredgewidth')
+    ]
     assert ax.rcparams_markers['symbol'] == rcparam_returns[0]
     assert ax.rcparams_markers['color'] == rcparam_returns[1]
     assert ax.rcparams_markers['size'] == rcparam_returns[2]
@@ -699,6 +705,8 @@ def test_set_rcparams_patch(rcparam_mock):
     ax._set_rcparams_patch()
 
     assert rcparam_mock.call_count == 3
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [call('patch.linewidth'), call('patch.facecolor'), call('patch.edgecolor')]
     assert ax.rcparams_patch['linewidth'] == rcparam_returns[0]
     assert ax.rcparams_patch['facecolor'] == rcparam_returns[1]
     assert ax.rcparams_patch['edgecolor'] == rcparam_returns[2]
@@ -725,6 +733,8 @@ def test_set_rcparams_font(rcparam_mock):
     ax._set_rcparams_font()
 
     assert rcparam_mock.call_count == 3
+    args_list = rcparam_mock.call_args_list
+    assert args_list == [call('font.family'), call('font.weight'), call('font.size')]
     assert ax.rcparams_font['family'] == rcparam_returns[0]
     assert ax.rcparams_font['weight'] == rcparam_returns[1]
     assert ax.rcparams_font['size'] == rcparam_returns[2]
