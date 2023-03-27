@@ -107,48 +107,18 @@ def test_save_fig_pdf_jpeg():
     fig.savefig('filename.jpg')
     fig.write_image.assert_called_with('filename.jpg')
 
-
-def test_save_fig_png():
-    fig = figureHandle()
-    fig.save_png = Mock()
-    filename = 'filename.png'
-    fig.savefig(filename)
-    fig.save_png.assert_called_with(filename)
+    fig.savefig('filename.png')
+    fig.write_image.assert_called_with('filename.png')
 
 
 def test_save_fig_error():
     fig = figureHandle()
-    fig.save_png = Mock()
     filename = 'filename.xml'
     try:
         fig.savefig(filename)
     except Exception as error:
         assert error.__class__.__name__ == 'ValueError'
         assert str(error) == f"Unrecognised file format in filename: {filename}"
-
-
-@patch.object(matly.matly_class.os, 'remove')
-@patch.object(matly.matly_class, 'open',
-              return_value = MOCKED_OPEN_FILE)
-@patch.object(matly.matly_class, 'convert_from_bytes')
-def test_save_png(convert_mock, open_mock, remove_mock):
-    mocked_image = mock_image()
-    convert_mock.return_value = [mocked_image]
-
-    fig = figureHandle()
-    fig.write_image = Mock()
-
-    fig.savefig('filename.png')
-    fig.write_image.assert_called_with('filename.pdf')
-    open_mock.assert_called()
-    args, _ = open_mock.call_args
-    assert args[0] == 'filename.pdf'
-    assert args[1] == 'rb'
-    convert_mock.assert_called_with(MOCKED_TEMP_SAVED_PDF)
-    mocked_image.save.assert_called()
-    mocked_image.save.assert_called_with('filename.png')
-    remove_mock.assert_called()
-    remove_mock.assert_called_with('filename.pdf')
 
 
 @patch.object(Matly, '_plot', side_effect=Mock())
