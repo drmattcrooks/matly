@@ -28,7 +28,7 @@ xtick.direction : out
 ytick.direction : out
 
 # -- Fonts --
-font.size : 16
+font.size : 12
 font.family : serif
 font.weight: normal
 text.color : grey
