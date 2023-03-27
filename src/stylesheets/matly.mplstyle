@@ -44,3 +44,10 @@ savefig.dpi : 500
 lines.linewidth : 3
 lines.linestyle : -
 lines.color : steelblue
+
+# -- Markers --
+lines.marker : None
+lines.markeredgecolor : steelblue
+lines.markeredgewidth : 2
+lines.markerfacecolor : steelblue
+lines.markersize : 6

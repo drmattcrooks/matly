@@ -79,7 +79,6 @@ class Matly:
             'size': None
         }
 
-
     def plot(self, *args):
         kwargs = {
             'x': None,
