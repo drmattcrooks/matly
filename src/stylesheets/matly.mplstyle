@@ -57,3 +57,11 @@ lines.markersize : 6
 patch.linewidth : 2
 patch.facecolor : steelblue
 patch.edgecolor : steelblue
+
+# -- Legend --
+legend.edgecolor : None
+legend.facecolor : inherit
+legend.fontsize : 12
+legend.frameon : False
+legend.loc : best
+legend.title_fontsize : None
