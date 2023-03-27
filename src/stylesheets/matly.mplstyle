@@ -51,3 +51,8 @@ lines.markeredgecolor : steelblue
 lines.markeredgewidth : 2
 lines.markerfacecolor : steelblue
 lines.markersize : 6
+
+# -- Patch --
+patch.linewidth : 2
+patch.facecolor : steelblue
+patch.edgecolor : steelblue
