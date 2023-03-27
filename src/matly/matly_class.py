@@ -79,6 +79,12 @@ class Matly:
             'size': None
         }
 
+        self.rcparams_patch = {
+            'linewidth': None,
+            'facecolor': None,
+            'edgecolor': None
+        }
+
     def plot(self, *args):
         kwargs = {
             'x': None,
@@ -237,6 +243,11 @@ class Matly:
         self.rcparams_markers['size'] = _get_rcparam_value('lines.markersize')
         self.rcparams_markers['line']['color'] = _get_rcparam_value('lines.markeredgecolor')
         self.rcparams_markers['line']['width'] = _get_rcparam_value('lines.markeredgewidth')
+
+    def _set_rcparams_patch(self):
+        self.rcparams_patch['linewidth'] = _get_rcparam_value('patch.linewidth')
+        self.rcparams_patch['facecolor'] = _get_rcparam_value('patch.facecolor')
+        self.rcparams_patch['edgecolor'] = _get_rcparam_value('patch.edgecolor')
 
 
 class figureHandle(go.Figure):
