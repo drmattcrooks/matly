@@ -1,0 +1,3 @@
+# -- Axes --
+grid.color : grey
+grid.linewidth : 0.5

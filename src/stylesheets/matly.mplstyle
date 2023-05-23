@@ -5,12 +5,14 @@ axes.spines.right : False
 axes.spines.top : False
 axes.grid : True
 axes.grid.axis : y
-grid.color : grey
-grid.linewidth : 0.5
 #axes.axisbelow : True
 axes.linewidth : 2
 axes.ymargin : 0
 axes.edgecolor : grey
+
+# -- Axes --
+grid.color : grey
+grid.linewidth : 0.5
 
 # -- Ticks and tick labels --
 axes.edgecolor : grey
