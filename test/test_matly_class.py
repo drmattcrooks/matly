@@ -42,9 +42,7 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'ytick.major.width': 2,
     'xtick.color': 'Mockgrey',
     'ytick.color': 'Mockred',
-    'lines.linewidth': 1.5,
-    'grid.color': 'grey',
-    'grid.linewidth': 0.5
+    'lines.linewidth': 1.5
 }
 MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.edgecolor': None,
@@ -71,9 +69,7 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'ytick.major.width': None,
     'xtick.color': None,
     'ytick.color': None,
-    'lines.linewidth': None,
-    'grid.color': None,
-    'grid.linewidth': None
+    'lines.linewidth': None
 }
 
 
@@ -830,62 +826,3 @@ def test_set_rcparams_legend(rcparam_mock, _):
     assert ax.rcparams_legend['frameon'] == rcparam_returns[3]
     assert ax.rcparams_legend['loc'] == rcparam_returns[4]
     assert ax.rcparams_legend['title_fontsize'] == rcparam_returns[5]
-
-
-@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-def test_set_rcparams_grid_structure(_):
-    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
-
-    assert 'xaxis' in ax.rcparams_grid.keys()
-    assert 'yaxis' in ax.rcparams_grid.keys()
-    assert ax.rcparams_grid['xaxis'] == {'gridcolor': None, 'gridwidth': None}
-    assert ax.rcparams_grid['yaxis'] == {'gridcolor': None, 'gridwidth': None}
-
-
-@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-@patch.object(matly.matly_class, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_grid(rcparam_mock, _):
-    rcparam_returns = [Mock(), Mock(), Mock(), Mock()]
-    rcparam_mock.side_effect = tuple(rcparam_returns)
-    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
-
-    ax._set_rcparams_grid()
-
-    assert rcparam_mock.call_count == 4
-    args_list = rcparam_mock.call_args_list
-    assert args_list == [
-        call('grid.color'), call('grid.linewidth'),
-        call('grid.color'), call('grid.linewidth')
-    ]
-    assert ax.rcparams_grid['xaxis']['gridcolor'] == rcparam_returns[0]
-    assert ax.rcparams_grid['xaxis']['gridwidth'] == rcparam_returns[1]
-    assert ax.rcparams_grid['yaxis']['gridcolor'] == rcparam_returns[2]
-    assert ax.rcparams_grid['yaxis']['gridwidth'] == rcparam_returns[3]
-
-
-@patch.object(matly.matly_class.Matly, '_set_rcparams_layout', return_value=Mock())
-def test_format_axes_from_rcparams(_):
-    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
-    ax.fig = Mock()
-    ax.fig.update_xaxes = Mock()
-    ax.fig.update_yaxes = Mock()
-    axis_kwargs = {
-        'xaxis': {
-            'gridcolor': Mock(),
-            'gridwidth': Mock(),
-            'zeroline': Mock()
-        },
-        'yaxis': {
-            'gridcolor': Mock(),
-            'gridwidth': Mock(),
-            'zeroline': Mock()
-        }
-    }
-
-    ax.rcParams_layout = axis_kwargs
-    ax.rcparams_grid = axis_kwargs
-
-    ax._format_axes_from_rcparams()
-
-    assert ax.fig.update_xaxes.call_args[1] == axis_kwargs['xaxis']
-    assert ax.fig.update_yaxes.call_args[1] == axis_kwargs['yaxis']

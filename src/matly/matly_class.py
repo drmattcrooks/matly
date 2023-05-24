@@ -112,17 +112,6 @@ class Matly:
             'title_fontsize': None
         }
 
-        self.rcparams_grid = {
-            'xaxis': {
-                'gridcolor': None,
-                'gridwidth': None
-            },
-            'yaxis': {
-                'gridcolor': None,
-                'gridwidth': None
-            }
-        }
-
         # set layout from rcparams
         self._set_rcparams_layout()
         self.fig.layout = self.rcParams_layout
@@ -311,27 +300,6 @@ class Matly:
         self.rcparams_legend['frameon'] = _get_rcparam_value('legend.frameon')
         self.rcparams_legend['loc'] = _get_rcparam_value('legend.loc')
         self.rcparams_legend['title_fontsize'] = _get_rcparam_value('legend.title_fontsize')
-
-    def _set_rcparams_grid(self):
-        self.rcparams_grid['xaxis']['gridcolor'] = _get_rcparam_value('grid.color')
-        self.rcparams_grid['xaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
-        self.rcparams_grid['yaxis']['gridcolor'] = _get_rcparam_value('grid.color')
-        self.rcparams_grid['yaxis']['gridwidth'] = _get_rcparam_value('grid.linewidth')
-
-    # ------------------------------
-    # -- Set values from rcparams --
-    # ------------------------------
-    def _format_axes_from_rcparams(self):
-        self.fig.update_xaxes(**{
-            'gridcolor': self.rcparams_grid['xaxis']['gridcolor'],
-            'gridwidth': self.rcparams_grid['xaxis']['gridwidth'],
-            'zeroline': self.rcParams_layout['xaxis']['zeroline']
-        })
-        self.fig.update_yaxes(**{
-            'gridcolor': self.rcparams_grid['yaxis']['gridcolor'],
-            'gridwidth': self.rcparams_grid['yaxis']['gridwidth'],
-            'zeroline': self.rcParams_layout['yaxis']['zeroline']
-        })
 
 
 class figureHandle(go.Figure):
