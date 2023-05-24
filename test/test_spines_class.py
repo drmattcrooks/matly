@@ -1,4 +1,4 @@
-from matly.matly_class import SpineClass
+from matly.spines_class import SpineClass
 
 
 def test_spine_class_attributes_defaults():

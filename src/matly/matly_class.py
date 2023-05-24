@@ -6,6 +6,7 @@ from matly import rcParams
 from matly.style import use
 from matly.rc_params import INCLUDED_STYLESHEETS, INCLUDED_STYLESHEET_FOLDER,\
     convert_stylesheet_to_dict
+from matly.spines_class import SpineClass
 
 
 DEFAULT_STYLESHEET = 'matly'
@@ -313,15 +314,6 @@ class figureHandle(go.Figure):
             self.write_image(filename)
         else:
             raise ValueError(f"Unrecognised file format in filename: {filename}")
-
-
-class SpineClass:
-    def __init__(self, label, visible, color):
-        self.spine = {
-            'visible': visible,
-            'color': color
-        }
-        self.label = label
 
 
 def _get_rcparam_value(parameter):
