@@ -1,0 +1,72 @@
+# -- Axes --
+axes.spines.bottom : True
+axes.spines.left : True
+axes.spines.right : True
+axes.spines.top : True
+axes.grid : False
+axes.grid.axis : None
+grid.color : grey
+grid.linewidth : 0
+#axes.axisbelow : True
+axes.linewidth : 2
+axes.ymargin : 0
+axes.edgecolor : grey
+
+# -- Ticks and tick labels --
+axes.edgecolor : grey
+xtick.color : grey
+ytick.color : grey
+xtick.major.width : 2
+ytick.major.width : 0
+xtick.major.size : 5
+ytick.major.size : 0
+xtick.bottom : True
+xtick.top : False
+ytick.left : True
+ytick.right : False
+xtick.direction : out
+ytick.direction : out
+
+# -- Fonts --
+font.size : 12
+font.family : serif
+font.weight: normal
+text.color : grey
+axes.labelcolor : grey
+axes.labelsize : 16
+
+# -- Background --
+axes.facecolor : white
+
+# -- Figure size --
+figure.figsize : (10, 7)
+
+# -- Saving Options --
+savefig.bbox : tight
+savefig.dpi : 500
+#savefig.transparent : True
+
+# -- Plot Styles --
+lines.linewidth : 3
+lines.linestyle : -
+lines.color : steelblue
+
+# -- Markers --
+lines.marker : None
+lines.markeredgecolor : steelblue
+lines.markeredgewidth : 2
+lines.markerfacecolor : steelblue
+lines.markersize : 6
+
+# -- Patch --
+patch.linewidth : 2
+patch.facecolor : steelblue
+patch.edgecolor : steelblue
+
+# -- Legend --
+legend.edgecolor : None
+legend.facecolor : inherit
+legend.fontsize : 12
+legend.frameon : False
+legend.loc : best
+legend.title_fontsize : None
