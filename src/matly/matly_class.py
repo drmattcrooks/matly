@@ -2,6 +2,8 @@ import plotly.graph_objects as go
 import tempfile
 from pdf2image import convert_from_path, convert_from_bytes
 import os
+import warnings
+
 from matly import rcParams
 from matly.style import use
 from matly.rc_params import INCLUDED_STYLESHEETS, INCLUDED_STYLESHEET_FOLDER,\
@@ -239,6 +241,10 @@ class Matly:
         # Grids
         self._set_rcparams_layout_grid()
 
+        # Spines
+        self._set_rcparams_spines()
+        self._set_rcparams_layout_spines()
+
         # -----------
         # -- Ticks --
         # -----------
@@ -267,6 +273,20 @@ class Matly:
             )
             for label in ['top', 'left', 'bottom', 'right']
         }
+
+    def _set_rcparams_layout_spines(self):
+        _is_top_spine_only(
+            self.rcParams_spines['top'].visible, self.rcParams_spines['bottom'].visible
+        )
+        _is_right_spine_only(
+            self.rcParams_spines['right'].visible, self.rcParams_spines['left'].visible
+        )
+
+        self.rcParams_layout['xaxis']['showline'] = self.rcParams_spines['bottom'].visible
+        self.rcParams_layout['yaxis']['showline'] = self.rcParams_spines['left'].visible
+        self.rcParams_layout['xaxis']['mirror'] = self.rcParams_spines['top'].visible
+        self.rcParams_layout['yaxis']['mirror'] = self.rcParams_spines['right'].visible
+
 
     def _set_rcparams_lines(self):
         self.rcparams_lines['width'] = _get_rcparam_value('lines.linewidth')
@@ -321,3 +341,13 @@ def _get_rcparam_value(parameter):
         parameter,
         MATLY_RCPARAMS_DEFAULTS[parameter]
     )
+
+
+def _is_right_spine_only(right_visible, left_visible):
+    if right_visible & (not left_visible):
+        warnings.warn('Cannot display right spine without left spine in plotly')
+
+
+def _is_top_spine_only(top_visible, bottom_visible):
+    if top_visible & (not bottom_visible):
+        warnings.warn('Cannot display top spine without bottom spine in plotly')
