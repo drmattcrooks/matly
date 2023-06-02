@@ -42,7 +42,8 @@ MOCKED_RCPARAMS_LAYOUT_DICT = {
     'ytick.major.width': 2,
     'xtick.color': 'Mockgrey',
     'ytick.color': 'Mockred',
-    'lines.linewidth': 1.5
+    'lines.linewidth': 1.5,
+    'figsize': (10, 7)
 }
 MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'axes.edgecolor': None,
@@ -69,7 +70,8 @@ MOCKED_RCPARAMS_LAYOUT_DICT_NONE = {
     'ytick.major.width': None,
     'xtick.color': None,
     'ytick.color': None,
-    'lines.linewidth': None
+    'lines.linewidth': None,
+    'figsize': None
 }
 
 
@@ -530,6 +532,11 @@ def test_set_rcparams_layout_tick_color(params_mock, _):
 
 @patch.object(
     m.Matly,
+    '_set_rcparams_layout_width_and_height',
+    return_value=Mock()
+)
+@patch.object(
+    m.Matly,
     '_set_rcparams_layout_xticks',
     return_value=Mock()
 )
@@ -585,7 +592,8 @@ def test_set_rcparams_layout_tick_color(params_mock, _):
 )
 def test_set_rcparams_layout(
         color_width_mock, background_mock, axis_label_mock, grid_mock, rc_spines_mock,
-        spines_mock, tick_color_mock, tick_size_mock, inout_mock, ytick_mock, xtick_mock
+        spines_mock, tick_color_mock, tick_size_mock, inout_mock, ytick_mock, xtick_mock,
+        width_and_height_mock
 ):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
 
@@ -600,6 +608,7 @@ def test_set_rcparams_layout(
     inout_mock.assert_called()
     ytick_mock.assert_called()
     xtick_mock.assert_called()
+    width_and_height_mock.assert_called()
 
 
 @patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
@@ -898,3 +907,31 @@ def test_is_top_spine_only_passes(warn_mock):
     m._is_top_spine_only(False, False)
     m._is_top_spine_only(False, True)
     warn_mock.assert_not_called()
+
+
+@patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_set_rcparams_layout_width_height_structure(_):
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert 'width' in ax.rcParams_layout.keys()
+    assert 'height' in ax.rcParams_layout.keys()
+
+
+@patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
+@patch.object(m, '_rescale_figure_size', return_values=Mock())
+@patch.object(m, '_get_rcparam_value', return_value=(Mock(), Mock()))
+def test_set_rcparams_layout_width_height_structure(value_mock, rescale_mock, _):
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    ax._set_rcparams_layout_width_and_height()
+
+    value_mock.assert_called_with('figure.figsize')
+    assert rescale_mock.call_args_list == [
+        call(value_mock.return_value[0]), call(value_mock.return_value[1])
+    ]
+    assert ax.rcParams_layout['width'] == rescale_mock.return_value
+    assert ax.rcParams_layout['height'] == rescale_mock.return_value
+
+
+def test_rescale_figure_size():
+    assert m._rescale_figure_size(7) == 500
