@@ -64,7 +64,9 @@ class Matly:
             },
             'title': {'font': {'size': None, 'color': None}},
             'plot_bgcolor': None,
-            'paper_bgcolor': None
+            'paper_bgcolor': None,
+            'width': None,
+            'height': None
         }
 
         self.rcparams_spines = {
@@ -228,6 +230,14 @@ class Matly:
         self.rcParams_layout['xaxis']['color'] = _get_rcparam_value('xtick.color')
         self.rcParams_layout['yaxis']['color'] = _get_rcparam_value('ytick.color')
 
+    def _set_rcparams_layout_width_and_height(self):
+        self.rcParams_layout['width'] = _rescale_figure_size(
+            _get_rcparam_value('figure.figsize')[0]
+        )
+        self.rcParams_layout['height'] = _rescale_figure_size(
+            _get_rcparam_value('figure.figsize')[1]
+        )
+
     def _set_rcparams_layout(self):
         # Set values of layout parameters
         self._set_rcparams_layout_axis_color_and_width()
@@ -263,6 +273,9 @@ class Matly:
 
         # Set ticks color
         self._set_rcparams_layout_tick_color()
+
+        # Set figsize
+        self._set_rcparams_layout_width_and_height()
 
     def _set_rcparams_spines(self):
         self.rcParams_spines = {
@@ -351,3 +364,7 @@ def _is_right_spine_only(right_visible, left_visible):
 def _is_top_spine_only(top_visible, bottom_visible):
     if top_visible & (not bottom_visible):
         warnings.warn('Cannot display top spine without bottom spine in plotly')
+
+
+def _rescale_figure_size(matplotlib_length):
+    return matplotlib_length * 500 / 7
