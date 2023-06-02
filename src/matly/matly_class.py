@@ -66,7 +66,8 @@ class Matly:
             'plot_bgcolor': None,
             'paper_bgcolor': None,
             'width': None,
-            'height': None
+            'height': None,
+            'margin': dict(l=5, r=5, b=5, t=10)
         }
 
         self.rcparams_spines = {
