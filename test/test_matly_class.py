@@ -935,3 +935,11 @@ def test_set_rcparams_layout_width_height_structure(value_mock, rescale_mock, _)
 
 def test_rescale_figure_size():
     assert m._rescale_figure_size(7) == 500
+
+
+@patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
+def test_set_rcparams_layout_margin_structure(_):
+    ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    assert 'margin' in ax.rcParams_layout.keys()
+    assert ax.rcParams_layout['margin'] == dict(l=5, r=5, b=5, t=10)
