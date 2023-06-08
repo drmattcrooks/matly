@@ -40,6 +40,7 @@ axes.facecolor : white
 
 # -- Figure size --
 figure.figsize : (10, 7)
+figure.facecolor : white
 
 # -- Saving Options --
 savefig.bbox : tight

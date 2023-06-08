@@ -3,6 +3,7 @@ import tempfile
 from pdf2image import convert_from_path, convert_from_bytes
 import os
 import warnings
+import re
 
 from matly import rcParams
 from matly.style import use
@@ -154,8 +155,10 @@ class Matly:
         self.rcParams_layout['yaxis']['linewidth'] = _get_rcparam_value('axes.linewidth')
 
     def _set_rcparams_layout_background_color(self):
-        self.rcParams_layout['plot_bgcolor'] = _get_rcparam_value('axes.facecolor')
-        self.rcParams_layout['paper_bgcolor'] = _get_rcparam_value('axes.facecolor')
+        self.rcParams_layout['plot_bgcolor'] = _parse_color(
+            _get_rcparam_value('axes.facecolor'))
+        self.rcParams_layout['paper_bgcolor'] = _parse_color(
+            _get_rcparam_value('figure.facecolor'))
 
     def _set_rcparams_layout_axis_label_fonts(self):
         self.rcParams_layout['title']['font']['size'] = _get_rcparam_value('axes.labelsize')
@@ -369,3 +372,27 @@ def _is_top_spine_only(top_visible, bottom_visible):
 
 def _rescale_figure_size(matplotlib_length):
     return matplotlib_length * 500 / 7
+
+
+def _parse_color(color):
+    if _is_hex_color(color):
+        return color
+    if _is_hex_like(color):
+        return _convert_to_hex_color(color)
+    else:
+        return color
+
+
+def _convert_to_hex_color(string_color):
+    return f"#{string_color}"
+
+
+def _is_hex_like(color_string):
+    if _is_hex_color(_convert_to_hex_color(color_string)):
+        return True
+    else:
+        return False
+
+
+def _is_hex_color(color_string):
+    return re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', color_string) is not None

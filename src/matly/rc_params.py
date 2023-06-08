@@ -2,7 +2,7 @@ import os
 from builtins import eval
 
 
-INCLUDED_STYLESHEETS = ['matly']
+INCLUDED_STYLESHEETS = ['matly', 'matplotlib', 'ggplot']
 INCLUDED_STYLESHEET_FOLDER = f"{os.path.dirname(__file__)}/../stylesheets"
 os.environ['matly_stylesheet'] = f"{INCLUDED_STYLESHEET_FOLDER}/matly.mplstyle"
 

@@ -284,17 +284,28 @@ def test_set_rcparams_layout_axis_color_and_width(rcparams_mock, _):
 
 
 @patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
-@patch.object(m, '_get_rcparam_value', return_value=Mock())
-def test_set_rcparams_layout_background_color(rcparams_mock, _):
+@patch.object(m, '_parse_color')
+@patch.object(m, '_get_rcparam_value')
+def test_set_rcparams_layout_background_color(rcparams_mock, color_mock, _):
     ax = Matly(**MOCKED_MATLY_INIT_KWARGS)
+
+    rcparams_mock_return_value = (Mock(), Mock())
+    rcparams_mock.side_effect = rcparams_mock_return_value
+    color_mock_return_value = (Mock(), Mock())
+    color_mock.side_effect = color_mock_return_value
+
     ax._set_rcparams_layout_background_color()
 
     assert rcparams_mock.call_count == 2
     assert rcparams_mock.call_args_list == [
-        call('axes.facecolor'), call('axes.facecolor')
+        call('axes.facecolor'), call('figure.facecolor')
     ]
-    assert ax.rcParams_layout['plot_bgcolor'] == rcparams_mock.return_value
-    assert ax.rcParams_layout['paper_bgcolor'] == rcparams_mock.return_value
+    color_mock.call_args_list == [
+        call(rcparams_mock_return_value[0]), call(rcparams_mock_return_value[1])
+    ]
+    assert color_mock.call_count == 2
+    assert ax.rcParams_layout['plot_bgcolor'] == color_mock_return_value[0]
+    assert ax.rcParams_layout['paper_bgcolor'] == color_mock_return_value[1]
 
 
 @patch.object(m.Matly, '_set_rcparams_layout', return_value=Mock())
@@ -943,3 +954,51 @@ def test_set_rcparams_layout_margin_structure(_):
 
     assert 'margin' in ax.rcParams_layout.keys()
     assert ax.rcParams_layout['margin'] == dict(l=5, r=5, b=5, t=10)
+
+
+def test_convert_to_hex_color():
+    assert m._convert_to_hex_color('x123') == '#x123'
+
+
+@patch.object(m, '_is_hex_color', return_value=True)
+def test_parse_color_is_hex(hex_mock):
+    assert m._parse_color('#123') == '#123'
+    hex_mock.assert_called_with('#123')
+
+
+@patch.object(m, '_convert_to_hex_color', return_value='#123')
+@patch.object(m, '_is_hex_like', return_value=True)
+def test_parse_color_is_hex_like(hex_mock, convert_mock):
+    assert m._parse_color('123') == '#123'
+    hex_mock.assert_called_with('123')
+    convert_mock.assert_called_with('123')
+
+
+@patch.object(m, '_is_hex_color', return_value=False)
+@patch.object(m, '_is_hex_like', return_value=False)
+def test_parse_color_is_not_hex(hex_mock, convert_mock):
+    color_mock = Mock()
+    assert m._parse_color(color_mock) == color_mock
+
+
+@patch.object(m.re, 'search', return_value=True)
+def test_is_hex_color_true(_):
+    assert m._is_hex_color('color_string') is True
+
+
+@patch.object(m.re, 'search', return_value=None)
+def test_is_hex_color_false(_):
+    assert m._is_hex_color('color_string') is False
+
+
+@patch.object(m, '_is_hex_color', return_value=False)
+@patch.object(m, '_convert_to_hex_color', return_value='#123')
+def test_is_hex_like_false(convert_mock, _):
+    assert m._is_hex_like('123') is False
+    convert_mock.assert_called_with('#123')
+
+
+@patch.object(m, '_is_hex_color', return_value=True)
+@patch.object(m, '_convert_to_hex_color', return_value='#123')
+def test_is_hex_like_false(_, __):
+    assert m._is_hex_like('123') is True
